@@ -1,7 +1,9 @@
-import apiClient from "@/api/client";
+import { apiClient } from "@/api/client";
 
 export async function getBackendHealth() {
-  const response = await apiClient.get("/health");
+  const response = await apiClient.get(
+    "/health"
+  );
 
   return response.data;
 }
