@@ -1,139 +1,529 @@
-# ========================================
-# MEDIVISION AI
-# ========================================
+# ============================================================
+# MEDIVISION AI - ROOT .gitignore
+# React + Vite + FastAPI + PostgreSQL + AI/ML
+# ============================================================
 
 
-# ----------------------------------------
-# Environment variables / secrets
-# ----------------------------------------
+# ============================================================
+# ENVIRONMENT VARIABLES / SECRETS
+# ============================================================
 
 .env
 .env.*
 !.env.example
 
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
 
-# ----------------------------------------
-# Python
-# ----------------------------------------
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+ai/.env
+ai/.env.*
+
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+secrets/
+credentials/
+private/
+
+
+# ============================================================
+# PYTHON
+# ============================================================
 
 __pycache__/
 *.py[cod]
 *$py.class
 
+*.so
+*.pyd
+
+.Python
+
+# Python virtual environments
 venv/
 .venv/
 env/
+ENV/
+.myenv/
 
+backend/venv/
+backend/.venv/
+backend/.myenv/
+
+# Package/build files
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Python caches/tools
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.pyre/
+.pytype/
+.dmypy.json
+dmypy.json
 
-*.egg-info/
-dist/
-build/
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# tox/nox
+.tox/
+.nox/
 
 
-# ----------------------------------------
-# FastAPI / Backend
-# ----------------------------------------
+# ============================================================
+# FASTAPI / BACKEND
+# ============================================================
 
-backend/.env
 backend/uploads/
+backend/storage/
+backend/media/
 backend/logs/
+backend/tmp/
+backend/temp/
+
+uploads/
+storage/
+media/
+tmp/
+temp/
+
+*.log
 
 
-# ----------------------------------------
-# Node / React
-# ----------------------------------------
+# ============================================================
+# NODE / REACT / VITE
+# ============================================================
 
 node_modules/
 frontend/node_modules/
 
+# Production build
 frontend/dist/
 frontend/build/
+dist/
+build/
 
+# Vite cache
+frontend/.vite/
+.vite/
+
+# npm
 npm-debug.log*
+npm-error.log*
+
+# yarn
 yarn-debug.log*
 yarn-error.log*
+
+# pnpm
 pnpm-debug.log*
 
+# package manager caches
+.npm/
+.yarn/
+.pnpm-store/
 
-# ----------------------------------------
-# Frontend environment
-# ----------------------------------------
+# optional lock/debug files
+*.tgz
 
-frontend/.env
-frontend/.env.local
-frontend/.env.production
+# frontend coverage
+frontend/coverage/
+coverage/
 
 
-# ----------------------------------------
-# AI / ML
-# ----------------------------------------
+# ============================================================
+# JAVASCRIPT / TYPESCRIPT CACHE
+# ============================================================
 
-*.joblib
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
+.svelte-kit/
+
+
+# ============================================================
+# AI / MACHINE LEARNING
+# ============================================================
+
+# Trained models
 *.pkl
 *.pickle
+*.joblib
+
 *.pt
 *.pth
-*.onnx
-*.h5
+*.ckpt
 
+*.onnx
+
+*.h5
+*.hdf5
+*.keras
+
+*.pb
+*.tflite
+
+# model folders
+ai/**/models/*
+!ai/**/models/.gitkeep
+!ai/**/models/README.md
+
+# experiment outputs
+ai/**/results/*
+!ai/**/results/.gitkeep
+!ai/**/results/README.md
+
+ai/**/outputs/
+ai/**/checkpoints/
+ai/**/runs/
+
+# ML experiment tools
+mlruns/
+wandb/
+lightning_logs/
+tensorboard/
+runs/
+
+
+# ============================================================
+# DATASETS
+# ============================================================
+
+# Raw / processed datasets
 ai/**/data/raw/*
 ai/**/data/processed/*
-ai/**/models/*
-ai/**/results/*
+ai/**/data/interim/*
+ai/**/data/external/*
 
-!ai/**/data/**/README.md
-!ai/**/models/.gitkeep
-!ai/**/results/.gitkeep
+# Keep documentation/placeholders
+!ai/**/data/raw/.gitkeep
+!ai/**/data/raw/README.md
 
+!ai/**/data/processed/.gitkeep
+!ai/**/data/processed/README.md
 
-# ----------------------------------------
-# Medical / User uploaded files
-# ----------------------------------------
+!ai/**/data/interim/.gitkeep
+!ai/**/data/external/.gitkeep
 
-uploads/
-medical_uploads/
+# Common dataset formats
+*.csv
+*.tsv
+*.parquet
+*.feather
 
+# Uncomment only if you want to ignore JSON datasets too
+# *.json
+
+# Medical image/data formats
 *.dcm
+*.dicom
+*.nii
+*.nii.gz
+*.mha
+*.mhd
+
+# Large archives
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.gz
 
 
-# ----------------------------------------
-# Jupyter
-# ----------------------------------------
+# ============================================================
+# JUPYTER NOTEBOOK
+# ============================================================
 
 .ipynb_checkpoints/
 
-
-# ----------------------------------------
-# IDE
-# ----------------------------------------
-
-.vscode/
-.idea/
+# optional notebook artifacts
+*.nbconvert.ipynb
 
 
-# ----------------------------------------
-# Operating System
-# ----------------------------------------
+# ============================================================
+# MEDICAL / USER UPLOADS
+# ============================================================
 
-.DS_Store
-Thumbs.db
+medical_uploads/
+patient_uploads/
+reports/
+prescriptions/
+medical_images/
+gradcam_outputs/
+
+# Do not commit real patient files
+private_data/
+patient_data/
+clinical_data/
 
 
-# ----------------------------------------
-# Logs
-# ----------------------------------------
+# ============================================================
+# DATABASE
+# ============================================================
 
-*.log
-logs/
-
-
-# ----------------------------------------
-# Database dumps
-# ----------------------------------------
-
+# PostgreSQL dumps/backups
 *.sql
 *.dump
 *.backup
+*.bak
+
+database_backups/
+db_backups/
+
+# SQLite in case used temporarily
+*.db
+*.sqlite
+*.sqlite3
+
+
+# ============================================================
+# ALEMBIC
+# ============================================================
+
+# IMPORTANT:
+# Do NOT ignore Alembic migrations.
+# They should be committed.
+
+# Keep:
+# backend/alembic/
+# backend/alembic/versions/
+# backend/alembic.ini
+
+
+# ============================================================
+# TESTING
+# ============================================================
+
+.pytest_cache/
+
+test-results/
+test_reports/
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+
+# ============================================================
+# LOGS
+# ============================================================
+
+logs/
+*.log
+
+debug.log
+error.log
+access.log
+
+
+# ============================================================
+# IDE / EDITORS
+# ============================================================
+
+# VS Code
+.vscode/
+
+# IntelliJ / PyCharm
+.idea/
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+
+# ============================================================
+# OPERATING SYSTEM
+# ============================================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+.directory
+
+
+# ============================================================
+# DOCKER
+# ============================================================
+
+# Local Docker overrides
+docker-compose.override.yml
+
+# Docker-generated data
+docker-data/
+postgres-data/
+redis-data/
+
+
+# ============================================================
+# POSTGRES LOCAL DATA
+# ============================================================
+
+.pgdata/
+postgres_data/
+postgres-data/
+
+
+# ============================================================
+# REDIS
+# ============================================================
+
+dump.rdb
+appendonly.aof
+redis-data/
+
+
+# ============================================================
+# TEMPORARY FILES
+# ============================================================
+
+*.tmp
+*.temp
+*.swp
+*.swo
+*.cache
+
+tmp/
+temp/
+
+
+# ============================================================
+# BACKUPS
+# ============================================================
+
+*.old
+*.orig
+*.backup
+*.bak
+
+backup/
+backups/
+
+
+# ============================================================
+# SECURITY / CLOUD CREDENTIALS
+# ============================================================
+
+.aws/
+.gcp/
+.azure/
+
+service-account*.json
+credentials*.json
+
+firebase-adminsdk*.json
+
+*.credentials
+
+
+# ============================================================
+# LOCAL CONFIG FILES
+# ============================================================
+
+config.local.*
+settings.local.*
+
+local_settings.py
+
+
+# ============================================================
+# MISC
+# ============================================================
+
+*.pid
+*.pid.lock
+
+.DS_Store?
+
+# generated documentation
+docs/_build/
+
+# profiling
+*.prof
+
+# memory dumps
+*.dmp
+
+
+# ============================================================
+# IMPORTANT FILES THAT MUST STAY TRACKED
+# ============================================================
+
+!.gitignore
+
+!.env.example
+!frontend/.env.example
+!backend/.env.example
+
+!README.md
+!LICENSE
+
+!frontend/package.json
+!frontend/package-lock.json
+
+!backend/requirements.txt
+
+!docker-compose.yml
+
+!backend/alembic.ini
