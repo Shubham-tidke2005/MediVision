@@ -10,6 +10,11 @@ import {
   ROLES,
 } from "@/constants/roles";
 
+
+// ======================================================
+// AUTH
+// ======================================================
+
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
 import PublicOnlyRoute from "@/features/auth/components/PublicOnlyRoute";
 import RoleRoute from "@/features/auth/components/RoleRoute";
@@ -18,9 +23,19 @@ import LoginPage from "@/features/auth/pages/LoginPage";
 import RegisterPage from "@/features/auth/pages/RegisterPage";
 import UnauthorizedPage from "@/features/auth/pages/UnauthorizedPage";
 
+
+// ======================================================
+// COMMON APPLICATION PAGES
+// ======================================================
+
 import DashboardPage from "@/pages/DashboardPage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import PlaceholderPage from "@/pages/PlaceholderPage";
+
+
+// ======================================================
+// PUBLIC WEBSITE
+// ======================================================
 
 import AboutPage from "@/pages/public/AboutPage";
 import HomePage from "@/pages/public/HomePage";
@@ -28,42 +43,85 @@ import SafetyPage from "@/pages/public/SafetyPage";
 import ServicesPage from "@/pages/public/ServicesPage";
 
 
-import PatientProfilePage
-  from "@/features/patient/pages/PatientProfilePage";
+// ======================================================
+// PATIENT
+// ======================================================
 
-import DoctorProfilePage
-  from "@/features/doctor/pages/DoctorProfilePage";
+import PatientProfilePage from "@/features/patient/pages/PatientProfilePage";
+
+
+// ======================================================
+// DOCTOR
+// ======================================================
+
+import DoctorProfilePage from "@/features/doctor/pages/DoctorProfilePage";
+
+import DoctorAvailabilityPage from "@/features/availability/pages/DoctorAvailabilityPage";
+
+
+// ======================================================
+// DOCTOR DISCOVERY
+// ======================================================
+
+import DoctorDiscoveryPage from "@/features/discovery/pages/DoctorDiscoveryPage";
+
+import DoctorDetailPage from "@/features/discovery/pages/DoctorDetailPage";
+
+
+// ======================================================
+// APPOINTMENTS
+// ======================================================
+
+import AppointmentsPage from "@/features/appointments/pages/AppointmentsPage";
+
+
 
 export default function AppRoutes() {
   return (
     <Routes>
 
-      {/* PUBLIC WEBSITE */}
+      {/* ================================================= */}
+      {/* PUBLIC WEBSITE                                    */}
+      {/* ================================================= */}
 
-      <Route element={<PublicLayout />}>
+      <Route
+        element={
+          <PublicLayout />
+        }
+      >
         <Route
           path="/"
-          element={<HomePage />}
+          element={
+            <HomePage />
+          }
         />
 
         <Route
           path="/services"
-          element={<ServicesPage />}
+          element={
+            <ServicesPage />
+          }
         />
 
         <Route
           path="/about"
-          element={<AboutPage />}
+          element={
+            <AboutPage />
+          }
         />
 
         <Route
           path="/safety"
-          element={<SafetyPage />}
+          element={
+            <SafetyPage />
+          }
         />
       </Route>
 
 
-      {/* LOGIN / REGISTER */}
+      {/* ================================================= */}
+      {/* LOGIN / REGISTER                                  */}
+      {/* ================================================= */}
 
       <Route
         element={
@@ -77,18 +135,24 @@ export default function AppRoutes() {
         >
           <Route
             path="/login"
-            element={<LoginPage />}
+            element={
+              <LoginPage />
+            }
           />
 
           <Route
             path="/register"
-            element={<RegisterPage />}
+            element={
+              <RegisterPage />
+            }
           />
         </Route>
       </Route>
 
 
-      {/* AUTHENTICATED APPLICATION */}
+      {/* ================================================= */}
+      {/* AUTHENTICATED APPLICATION                         */}
+      {/* ================================================= */}
 
       <Route
         element={
@@ -96,10 +160,14 @@ export default function AppRoutes() {
         }
       >
         <Route
-          element={<AppShell />}
+          element={
+            <AppShell />
+          }
         >
 
-          {/* ALL ROLES */}
+          {/* ============================================= */}
+          {/* ALL AUTHENTICATED USERS                       */}
+          {/* ============================================= */}
 
           <Route
             path="/dashboard"
@@ -116,6 +184,35 @@ export default function AppRoutes() {
           />
 
 
+          {/* ============================================= */}
+          {/* APPOINTMENTS                                   */}
+          {/* PATIENT + DOCTOR                               */}
+          {/* ============================================= */}
+
+          <Route
+            element={
+              <RoleRoute
+                allowedRoles={[
+                  ROLES.PATIENT,
+                  ROLES.DOCTOR,
+                ]}
+              />
+            }
+          >
+            <Route
+              path="/appointments"
+              element={
+                <AppointmentsPage />
+              }
+            />
+          </Route>
+
+
+          {/* ============================================= */}
+          {/* NOTIFICATIONS                                  */}
+          {/* PATIENT + DOCTOR + ADMIN                       */}
+          {/* ============================================= */}
+
           <Route
             element={
               <RoleRoute
@@ -127,16 +224,6 @@ export default function AppRoutes() {
               />
             }
           >
-            <Route
-              path="/appointments"
-              element={
-                <PlaceholderPage
-                  title="Appointments"
-                  description="Manage healthcare appointments and schedules."
-                />
-              }
-            />
-
             <Route
               path="/notifications"
               element={
@@ -149,7 +236,9 @@ export default function AppRoutes() {
           </Route>
 
 
-          {/* PATIENT */}
+          {/* ============================================= */}
+          {/* PATIENT ROUTES                                 */}
+          {/* ============================================= */}
 
           <Route
             element={
@@ -160,6 +249,19 @@ export default function AppRoutes() {
               />
             }
           >
+
+            {/* Patient Profile */}
+
+            <Route
+              path="/patient/profile"
+              element={
+                <PatientProfilePage />
+              }
+            />
+
+
+            {/* Medical History */}
+
             <Route
               path="/medical-history"
               element={
@@ -169,6 +271,9 @@ export default function AppRoutes() {
                 />
               }
             />
+
+
+            {/* Health Tracking */}
 
             <Route
               path="/health"
@@ -180,6 +285,9 @@ export default function AppRoutes() {
               }
             />
 
+
+            {/* AI Symptom Assessment */}
+
             <Route
               path="/symptom-assessment"
               element={
@@ -189,6 +297,9 @@ export default function AppRoutes() {
                 />
               }
             />
+
+
+            {/* Medical Image AI */}
 
             <Route
               path="/medical-image"
@@ -200,15 +311,27 @@ export default function AppRoutes() {
               }
             />
 
+
+            {/* =========================================== */}
+            {/* DOCTOR DISCOVERY                            */}
+            {/* =========================================== */}
+
             <Route
               path="/doctors"
               element={
-                <PlaceholderPage
-                  title="Find Doctors"
-                  description="Discover appropriate healthcare specialists."
-                />
+                <DoctorDiscoveryPage />
               }
             />
+
+            <Route
+              path="/doctors/:doctorId"
+              element={
+                <DoctorDetailPage />
+              }
+            />
+
+
+            {/* Nearby Healthcare */}
 
             <Route
               path="/nearby"
@@ -219,6 +342,9 @@ export default function AppRoutes() {
                 />
               }
             />
+
+
+            {/* Diet & Routine */}
 
             <Route
               path="/wellness"
@@ -231,22 +357,10 @@ export default function AppRoutes() {
             />
           </Route>
 
-          <Route
-              path="/patient/profile"
-            element={
-                <PatientProfilePage />
-             }
-          />
 
-
-          {/* DOCTOR */}
-
-          <Route
-              path="/doctor/profile"
-              element={
-              <DoctorProfilePage />
-              }
-          />
+          {/* ============================================= */}
+          {/* DOCTOR ROUTES                                  */}
+          {/* ============================================= */}
 
           <Route
             element={
@@ -257,6 +371,29 @@ export default function AppRoutes() {
               />
             }
           >
+
+            {/* Doctor Profile */}
+
+            <Route
+              path="/doctor/profile"
+              element={
+                <DoctorProfilePage />
+              }
+            />
+
+
+            {/* Doctor Availability */}
+
+            <Route
+              path="/doctor/availability"
+              element={
+                <DoctorAvailabilityPage />
+              }
+            />
+
+
+            {/* Patient Records */}
+
             <Route
               path="/doctor/patients"
               element={
@@ -266,20 +403,12 @@ export default function AppRoutes() {
                 />
               }
             />
-
-            <Route
-              path="/doctor/availability"
-              element={
-                <PlaceholderPage
-                  title="Doctor Availability"
-                  description="Manage your consultation availability."
-                />
-              }
-            />
           </Route>
 
 
-          {/* ADMIN */}
+          {/* ============================================= */}
+          {/* ADMIN ROUTES                                   */}
+          {/* ============================================= */}
 
           <Route
             element={
@@ -290,6 +419,9 @@ export default function AppRoutes() {
               />
             }
           >
+
+            {/* Doctor Verification */}
+
             <Route
               path="/admin/doctors"
               element={
@@ -299,6 +431,9 @@ export default function AppRoutes() {
                 />
               }
             />
+
+
+            {/* Audit Logs */}
 
             <Route
               path="/admin/audit"
@@ -315,11 +450,15 @@ export default function AppRoutes() {
       </Route>
 
 
-      {/* 404 */}
+      {/* ================================================= */}
+      {/* 404                                               */}
+      {/* ================================================= */}
 
       <Route
         path="*"
-        element={<NotFoundPage />}
+        element={
+          <NotFoundPage />
+        }
       />
 
     </Routes>

@@ -4,6 +4,19 @@ from fastapi import (
     status,
 )
 
+
+from app.schemas.doctor_dashboard import (
+    DoctorDashboardResponse,
+)
+
+from app.services.doctor_dashboard import (
+    get_doctor_dashboard,
+)
+
+from app.api.dependencies import (
+    get_current_doctor,
+)
+
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import (
@@ -29,6 +42,7 @@ from app.services.doctor import (
     list_active_specialties,
     update_my_doctor_profile,
 )
+from app.models.doctor import Doctor
 
 
 router = APIRouter(
@@ -112,4 +126,23 @@ def update_my_profile(
         db,
         current_user,
         payload,
+    )
+    
+
+@router.get(
+    "/me/dashboard",
+    response_model=DoctorDashboardResponse,
+)
+def doctor_dashboard(
+    doctor: Doctor = Depends(
+        get_current_doctor
+    ),
+
+    db: Session = Depends(
+        get_db
+    ),
+):
+    return get_doctor_dashboard(
+        db,
+        doctor,
     )

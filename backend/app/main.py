@@ -16,11 +16,24 @@ from app.api.v1.patients import (
 from app.api.v1.doctors import (
     router as doctors_router,
 )
+from app.api.v1.availability import (
+    router as availability_router,
+)
+from app.api.v1.discovery import (
+    router as discovery_router,
+)
+from app.api.v1.appointments import (
+    router as appointments_router,
+)
+
+
 
 app = FastAPI(
     title=settings.app_name,
     version="1.0.0",
 )
+
+
 
 
 app.add_middleware(
@@ -57,5 +70,21 @@ app.include_router(
 
 app.include_router(
     doctors_router,
+    prefix="/api/v1",
+)
+
+
+app.include_router(
+    availability_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    discovery_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    appointments_router,
     prefix="/api/v1",
 )

@@ -12,3 +12,25 @@ class DoctorVerificationStatus(str, Enum):
     VERIFIED = "VERIFIED"
     REJECTED = "REJECTED"
     SUSPENDED = "SUSPENDED"
+    
+    
+class SlotStatus(str, Enum):
+    AVAILABLE = "AVAILABLE"
+    HELD = "HELD"
+    BOOKED = "BOOKED"
+    BLOCKED = "BLOCKED"
+    
+    
+class AppointmentType(str, Enum):
+    IN_PERSON = "IN_PERSON"
+    ONLINE = "ONLINE"
+    PHONE = "PHONE"
+
+
+class AppointmentStatus(str, Enum):
+    REQUESTED = "REQUESTED"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    CANCELLED = "CANCELLED"
+    COMPLETED = "COMPLETED"
+    NO_SHOW = "NO_SHOW"
