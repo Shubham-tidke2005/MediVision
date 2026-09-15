@@ -11,6 +11,10 @@ import {
   navigationItems,
 } from "@/config/navigation";
 
+import {
+  useAuth,
+} from "@/features/auth/hooks/useAuth";
+
 
 export default function MobileSidebar({
   open,
@@ -19,6 +23,16 @@ export default function MobileSidebar({
   if (!open) {
     return null;
   }
+
+  const { user } = useAuth();
+
+  const visibleItems =
+    navigationItems.filter(
+      (item) =>
+        item.roles.includes(
+        user.role
+      )
+    );
 
   return (
     <div
@@ -147,7 +161,7 @@ export default function MobileSidebar({
             p-3
           "
         >
-          {navigationItems.map(
+          {visibleItems.map(
             (item) => {
               const Icon = item.icon;
 

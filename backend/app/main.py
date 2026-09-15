@@ -9,6 +9,14 @@ from app.api.v1.access_test import (
     router as access_test_router,
 )
 
+from app.api.v1.patients import (
+    router as patients_router,
+)
+
+from app.api.v1.doctors import (
+    router as doctors_router,
+)
+
 app = FastAPI(
     title=settings.app_name,
     version="1.0.0",
@@ -38,5 +46,16 @@ app.include_router(
 
 app.include_router(
     access_test_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    patients_router,
+    prefix="/api/v1",
+)
+
+
+app.include_router(
+    doctors_router,
     prefix="/api/v1",
 )

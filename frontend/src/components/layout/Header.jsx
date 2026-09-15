@@ -1,13 +1,44 @@
 import {
   Bell,
+  LogOut,
   Menu,
   Search,
 } from "lucide-react";
+
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
+import {
+  useAuth,
+} from "@/features/auth/hooks/useAuth";
 
 
 export default function Header({
   onOpenMenu,
 }) {
+  const navigate =
+    useNavigate();
+
+  const {
+    user,
+    logout,
+  } = useAuth();
+
+
+  function handleLogout() {
+    logout();
+
+    navigate(
+      "/",
+      {
+        replace: true,
+      }
+    );
+  }
+
+
   return (
     <header
       className="
@@ -30,6 +61,7 @@ export default function Header({
         lg:px-8
       "
     >
+      {/* Mobile menu button */}
       <button
         type="button"
         onClick={onOpenMenu}
@@ -42,6 +74,9 @@ export default function Header({
           justify-center
           rounded-lg
           text-slate-600
+
+          transition-all
+          duration-200
 
           hover:bg-slate-100
           hover:text-slate-900
@@ -56,9 +91,14 @@ export default function Header({
           md:hidden
         "
       >
-        <Menu className="h-5 w-5" />
+        <Menu
+          className="h-5 w-5"
+          aria-hidden="true"
+        />
       </button>
 
+
+      {/* Search */}
       <div
         className="
           hidden
@@ -86,26 +126,33 @@ export default function Header({
               -translate-y-1/2
               text-slate-400
             "
+            aria-hidden="true"
           />
 
           <input
             id="global-search"
             type="search"
-            placeholder="Search..."
+            placeholder="Search MediVision..."
             className="
               min-h-[44px]
               w-full
               rounded-lg
+
               border
               border-slate-200
               bg-white
+
               py-2
               pl-10
               pr-3
+
               text-sm
               text-slate-900
 
               placeholder:text-slate-400
+
+              transition-all
+              duration-200
 
               focus:outline-none
               focus:ring-2
@@ -116,6 +163,8 @@ export default function Header({
         </div>
       </div>
 
+
+      {/* Right side */}
       <div
         className="
           ml-auto
@@ -124,18 +173,24 @@ export default function Header({
           gap-2
         "
       >
-        <button
-          type="button"
+        {/* Notifications */}
+        <Link
+          to="/notifications"
           aria-label="Notifications"
           className="
             relative
+
             flex
             min-h-[44px]
             min-w-[44px]
             items-center
             justify-center
+
             rounded-lg
             text-slate-600
+
+            transition-all
+            duration-200
 
             hover:bg-slate-100
             hover:text-slate-900
@@ -148,7 +203,10 @@ export default function Header({
             focus:ring-offset-2
           "
         >
-          <Bell className="h-5 w-5" />
+          <Bell
+            className="h-5 w-5"
+            aria-hidden="true"
+          />
 
           <span
             className="
@@ -160,20 +218,98 @@ export default function Header({
               rounded-full
               bg-blue-600
             "
+            aria-hidden="true"
           />
-        </button>
+        </Link>
 
-        <button
-          type="button"
+
+        {/* User information */}
+        <div
           className="
-            flex
-            min-h-[44px]
+            hidden
+            min-w-0
             items-center
             gap-3
             rounded-lg
             px-2
+            lg:flex
+          "
+        >
+          <div
+            className="
+              flex
+              h-9
+              w-9
+              shrink-0
+              items-center
+              justify-center
+              rounded-full
+              bg-sky-50
+              text-sm
+              font-semibold
+              text-sky-700
+            "
+          >
+            {user?.email
+              ?.charAt(0)
+              ?.toUpperCase() ??
+              "U"}
+          </div>
+
+          <div
+            className="
+              min-w-0
+              text-left
+            "
+          >
+            <p
+              className="
+                max-w-[220px]
+                truncate
+                text-sm
+                font-semibold
+                text-slate-900
+              "
+            >
+              {user?.email ??
+                "User"}
+            </p>
+
+            <p
+              className="
+                text-xs
+                font-medium
+                text-slate-500
+              "
+            >
+              {user?.role ??
+                "ACCOUNT"}
+            </p>
+          </div>
+        </div>
+
+
+        {/* Logout */}
+        <button
+          type="button"
+          onClick={handleLogout}
+          aria-label="Sign out"
+          title="Sign out"
+          className="
+            flex
+            min-h-[44px]
+            min-w-[44px]
+            items-center
+            justify-center
+
+            rounded-lg
+            text-slate-600
+
+            transition-all
+            duration-200
 
             hover:bg-slate-100
+            hover:text-slate-900
 
             active:scale-[0.98]
 
@@ -183,49 +319,10 @@ export default function Header({
             focus:ring-offset-2
           "
         >
-          <div
-            className="
-              flex
-              h-9
-              w-9
-              items-center
-              justify-center
-              rounded-full
-              bg-slate-100
-              text-sm
-              font-semibold
-              text-slate-700
-            "
-          >
-            U
-          </div>
-
-          <div
-            className="
-              hidden
-              text-left
-              lg:block
-            "
-          >
-            <p
-              className="
-                text-sm
-                font-semibold
-                text-slate-900
-              "
-            >
-              User
-            </p>
-
-            <p
-              className="
-                text-xs
-                text-slate-500
-              "
-            >
-              Account
-            </p>
-          </div>
+          <LogOut
+            className="h-5 w-5"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </header>

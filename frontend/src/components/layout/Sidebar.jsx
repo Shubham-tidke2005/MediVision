@@ -1,14 +1,18 @@
 import {
-  NavLink,
-} from "react-router-dom";
-
-import {
   HeartPulse,
 } from "lucide-react";
 
 import {
+  NavLink,
+} from "react-router-dom";
+
+import {
   navigationItems,
 } from "@/config/navigation";
+
+import {
+  useAuth,
+} from "@/features/auth/hooks/useAuth";
 
 
 function SidebarItem({
@@ -28,9 +32,11 @@ function SidebarItem({
         rounded-lg
         px-3
         py-2
+
         text-sm
         font-medium
-        transition-colors
+
+        transition-all
         duration-200
 
         focus:outline-none
@@ -61,7 +67,12 @@ function SidebarItem({
         aria-hidden="true"
       />
 
-      <span className="md:hidden lg:inline">
+      <span
+        className="
+          md:hidden
+          lg:inline
+        "
+      >
         {item.label}
       </span>
     </NavLink>
@@ -70,6 +81,20 @@ function SidebarItem({
 
 
 export default function Sidebar() {
+  const {
+    user,
+  } = useAuth();
+
+
+  const visibleItems =
+    navigationItems.filter(
+      (item) =>
+        item.roles?.includes(
+          user?.role
+        )
+    );
+
+
   return (
     <aside
       className="
@@ -77,6 +102,7 @@ export default function Sidebar() {
         inset-y-0
         left-0
         z-30
+
         hidden
 
         border-r
@@ -90,16 +116,21 @@ export default function Sidebar() {
         lg:w-72
       "
     >
+      {/* Brand */}
       <div
         className="
           flex
           h-16
+          shrink-0
           items-center
+
           border-b
           border-slate-200
+
           px-4
 
           md:justify-center
+
           lg:justify-start
           lg:px-6
         "
@@ -116,20 +147,32 @@ export default function Sidebar() {
               flex
               h-10
               w-10
+              shrink-0
               items-center
               justify-center
+
               rounded-xl
               bg-blue-600
               text-white
             "
           >
             <HeartPulse
-              className="h-5 w-5"
+              className="
+                h-5
+                w-5
+              "
               aria-hidden="true"
             />
           </div>
 
-          <div className="hidden lg:block">
+
+          <div
+            className="
+              hidden
+              min-w-0
+              lg:block
+            "
+          >
             <p
               className="
                 text-sm
@@ -152,6 +195,8 @@ export default function Sidebar() {
         </div>
       </div>
 
+
+      {/* Navigation */}
       <nav
         className="
           flex-1
@@ -161,7 +206,7 @@ export default function Sidebar() {
         "
         aria-label="Primary navigation"
       >
-        {navigationItems.map(
+        {visibleItems.map(
           (item) => (
             <SidebarItem
               key={item.path}
@@ -171,13 +216,52 @@ export default function Sidebar() {
         )}
       </nav>
 
+
+      {/* Bottom section */}
       <div
         className="
+          shrink-0
           border-t
           border-slate-200
           p-4
         "
       >
+        {/* Tablet role indicator */}
+        <div
+          className="
+            hidden
+            text-center
+            md:block
+            lg:hidden
+          "
+        >
+          <div
+            className="
+              mx-auto
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+
+              rounded-full
+
+              bg-sky-50
+              text-sm
+              font-semibold
+              text-sky-700
+            "
+            title={user?.role}
+          >
+            {user?.role
+              ?.charAt(0)
+              ?.toUpperCase() ??
+              "U"}
+          </div>
+        </div>
+
+
+        {/* Desktop information */}
         <div
           className="
             hidden
@@ -194,7 +278,9 @@ export default function Sidebar() {
               text-slate-700
             "
           >
-            AI-assisted healthcare
+            {user?.role
+              ? `${user.role} account`
+              : "MediVision account"}
           </p>
 
           <p
@@ -205,9 +291,9 @@ export default function Sidebar() {
               text-slate-500
             "
           >
-            Results support clinical
-            decisions and do not replace
-            professional care.
+            AI-assisted healthcare tools
+            support decision-making and do
+            not replace professional care.
           </p>
         </div>
       </div>
