@@ -29,6 +29,12 @@ from app.models.medical_access import MedicalAccessGrant
 
 from app.models.medical_document import MedicalDocument
 
+from app.models.medication_reminder import (
+    MedicationAdherenceLog,
+    MedicationSchedule,
+    PatientMedication,
+)
+
 __all__ = [
     "User",
     "Address",

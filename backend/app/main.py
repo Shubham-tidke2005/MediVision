@@ -43,6 +43,10 @@ from app.api.v1.medical_access import (
     router as medical_access_router,
 )
 
+from app.api.v1.medication_reminders import (
+    router as medication_reminders_router,
+)
+
 app = FastAPI(
     title=settings.app_name,
     version="1.0.0",
@@ -126,5 +130,10 @@ app.include_router(
 
 app.include_router(
     medical_access_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    medication_reminders_router,
     prefix="/api/v1",
 )

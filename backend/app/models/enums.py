@@ -58,3 +58,20 @@ class DocumentType(str, Enum):
 class AccessScope(str, Enum):
     FULL_HISTORY = "FULL_HISTORY"
     APPOINTMENT_ONLY = "APPOINTMENT_ONLY"
+    
+class MedicationSource(str, Enum):
+    PRESCRIPTION = "PRESCRIPTION"
+    MANUAL = "MANUAL"
+
+
+class MedicationStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    COMPLETED = "COMPLETED"
+    STOPPED = "STOPPED"
+
+
+class AdherenceStatus(str, Enum):
+    TAKEN = "TAKEN"
+    MISSED = "MISSED"
+    SKIPPED = "SKIPPED"
+    LATE = "LATE"

@@ -36,6 +36,9 @@ from app.schemas.prescription import (
     PrescriptionUpdate,
 )
 
+from app.services.medication_reminder import (
+    create_medication_from_prescription_item,
+)
 
 def serialize_medicine(
     medicine: Medicine,
@@ -709,3 +712,4 @@ def delete_prescription_item(
     )
 
     db.commit()
+    

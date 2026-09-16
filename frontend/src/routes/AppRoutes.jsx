@@ -114,6 +114,8 @@ import AppointmentsPage from "@/features/appointments/pages/AppointmentsPage";
 import EncounterPage from "@/features/encounters/pages/EncounterPage";
 
 
+import PatientMedicationsPage
+  from "@/features/medications/pages/PatientMedicationsPage";
 // ======================================================
 // APP ROUTES
 // ======================================================
@@ -295,6 +297,13 @@ export default function AppRoutes() {
             {/* =========================================== */}
             {/* PATIENT PROFILE                             */}
             {/* =========================================== */}
+
+            <Route
+  path="/patient/medications"
+  element={
+    <PatientMedicationsPage />
+  }
+/>
 
             <Route
               path="/patient/profile"
