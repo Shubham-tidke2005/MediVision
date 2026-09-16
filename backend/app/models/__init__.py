@@ -13,7 +13,21 @@ from app.models.appointment import (
     Appointment,
     AppointmentStatusHistory,
 )
+from app.models.diagnosis import (
+    Diagnosis,
+    EncounterDiagnosis,
+)
 
+from app.models.encounter import Encounter
+
+from app.models.prescription import (
+    Medicine,
+    Prescription,
+    PrescriptionItem,
+)
+from app.models.medical_access import MedicalAccessGrant
+
+from app.models.medical_document import MedicalDocument
 
 __all__ = [
     "User",

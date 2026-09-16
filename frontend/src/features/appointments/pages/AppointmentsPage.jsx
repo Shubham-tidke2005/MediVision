@@ -1,8 +1,16 @@
 import {
+  useState,
+} from "react";
+
+import {
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+
+import {
+  useNavigate,
+} from "react-router-dom";
 
 import PageHeader from "@/components/common/PageHeader";
 
@@ -11,12 +19,15 @@ import AppointmentCard from "@/features/appointments/components/AppointmentCard"
 import {
   approveAppointment,
   cancelAppointment,
-  completeAppointment,
   getDoctorAppointments,
   getPatientAppointments,
   markAppointmentNoShow,
   rejectAppointment,
 } from "@/features/appointments/api/appointmentApi";
+
+import {
+  startEncounter,
+} from "@/features/encounters/api/encounterApi";
 
 import {
   useAuth,
@@ -36,18 +47,34 @@ export default function AppointmentsPage() {
     user,
   } = useAuth();
 
+  const navigate =
+    useNavigate();
+
   const queryClient =
     useQueryClient();
 
+  const [
+    actionError,
+    setActionError,
+  ] = useState("");
+
+
+  // ======================================================
+  // ROLE CHECKS
+  // ======================================================
 
   const isPatient =
-    user.role
+    user?.role
     === ROLES.PATIENT;
 
   const isDoctor =
-    user.role
+    user?.role
     === ROLES.DOCTOR;
 
+
+  // ======================================================
+  // QUERY KEY
+  // ======================================================
 
   const queryKey =
     isPatient
@@ -58,6 +85,10 @@ export default function AppointmentsPage() {
           "doctor-appointments",
         ];
 
+
+  // ======================================================
+  // LOAD APPOINTMENTS
+  // ======================================================
 
   const {
     data: appointments = [],
@@ -78,30 +109,70 @@ export default function AppointmentsPage() {
   });
 
 
+  // ======================================================
+  // REFRESH RELATED DATA
+  // ======================================================
+
   async function refresh() {
-  await Promise.all([
-    queryClient.invalidateQueries({
-      queryKey,
-    }),
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey,
+      }),
 
-    queryClient.invalidateQueries({
-      queryKey: [
-        "doctor-dashboard",
-      ],
-    }),
-  ]);
-}
+      queryClient.invalidateQueries({
+        queryKey: [
+          "patient-dashboard",
+        ],
+      }),
 
+      queryClient.invalidateQueries({
+        queryKey: [
+          "doctor-dashboard",
+        ],
+      }),
+
+      queryClient.invalidateQueries({
+        queryKey: [
+          "doctor-available-slots",
+        ],
+      }),
+    ]);
+  }
+
+
+  // ======================================================
+  // APPROVE APPOINTMENT
+  // ======================================================
 
   const approveMutation =
     useMutation({
       mutationFn:
         approveAppointment,
 
+      onMutate: () => {
+        setActionError("");
+      },
+
       onSuccess:
-        refresh,
+        async () => {
+          await refresh();
+        },
+
+      onError:
+        (mutationError) => {
+          setActionError(
+            getApiErrorMessage(
+              mutationError,
+              "Unable to approve appointment."
+            )
+          );
+        },
     });
 
+
+  // ======================================================
+  // REJECT APPOINTMENT
+  // ======================================================
 
   const rejectMutation =
     useMutation({
@@ -115,10 +186,30 @@ export default function AppointmentsPage() {
             reason
           ),
 
+      onMutate: () => {
+        setActionError("");
+      },
+
       onSuccess:
-        refresh,
+        async () => {
+          await refresh();
+        },
+
+      onError:
+        (mutationError) => {
+          setActionError(
+            getApiErrorMessage(
+              mutationError,
+              "Unable to reject appointment."
+            )
+          );
+        },
     });
 
+
+  // ======================================================
+  // CANCEL APPOINTMENT
+  // ======================================================
 
   const cancelMutation =
     useMutation({
@@ -132,47 +223,116 @@ export default function AppointmentsPage() {
             reason
           ),
 
+      onMutate: () => {
+        setActionError("");
+      },
+
       onSuccess:
         async () => {
           await refresh();
+        },
 
-          await queryClient
-            .invalidateQueries({
-              queryKey: [
-                "doctor-available-slots",
-              ],
-            });
+      onError:
+        (mutationError) => {
+          setActionError(
+            getApiErrorMessage(
+              mutationError,
+              "Unable to cancel appointment."
+            )
+          );
         },
     });
 
 
-  const completeMutation =
-    useMutation({
-      mutationFn:
-        completeAppointment,
-
-      onSuccess:
-        refresh,
-    });
-
+  // ======================================================
+  // NO SHOW
+  // ======================================================
 
   const noShowMutation =
     useMutation({
       mutationFn:
         markAppointmentNoShow,
 
+      onMutate: () => {
+        setActionError("");
+      },
+
       onSuccess:
-        refresh,
+        async () => {
+          await refresh();
+        },
+
+      onError:
+        (mutationError) => {
+          setActionError(
+            getApiErrorMessage(
+              mutationError,
+              "Unable to mark appointment as no-show."
+            )
+          );
+        },
     });
 
+
+  // ======================================================
+  // START CONSULTATION / ENCOUNTER
+  // IMPORTANT: THIS HOOK MUST STAY INSIDE THE COMPONENT
+  // ======================================================
+
+  const startEncounterMutation =
+    useMutation({
+      mutationFn:
+        ({
+          appointmentId,
+          chiefComplaint,
+        }) =>
+          startEncounter(
+            appointmentId,
+            {
+              chief_complaint:
+                chiefComplaint
+                || null,
+            }
+          ),
+
+      onMutate: () => {
+        setActionError("");
+      },
+
+      onSuccess:
+        (encounter) => {
+          navigate(
+            `/doctor/encounters/${encounter.id}`
+          );
+        },
+
+      onError:
+        (mutationError) => {
+          setActionError(
+            getApiErrorMessage(
+              mutationError,
+              "Unable to start consultation."
+            )
+          );
+        },
+    });
+
+
+  // ======================================================
+  // GLOBAL ACTION PENDING STATE
+  // ======================================================
 
   const pending =
     approveMutation.isPending
     || rejectMutation.isPending
     || cancelMutation.isPending
-    || completeMutation.isPending
-    || noShowMutation.isPending;
+    || noShowMutation.isPending
+    || startEncounterMutation.isPending;
 
+
+  // ======================================================
+  // ROLE SAFETY
+  // ======================================================
 
   if (
     !isPatient
@@ -189,32 +349,82 @@ export default function AppointmentsPage() {
           shadow-sm
         "
       >
+        <h1
+          className="
+            font-semibold
+            text-slate-900
+          "
+        >
+          Appointments unavailable
+        </h1>
+
         <p
           className="
+            mt-2
             text-sm
             text-slate-500
           "
         >
-          Appointment management for
-          this account type is not
-          available in this phase.
+          Appointment management is currently
+          available only for Patient and Doctor
+          accounts.
         </p>
       </div>
     );
   }
 
 
+  // ======================================================
+  // PAGE
+  // ======================================================
+
   return (
-    <div className="space-y-6">
+    <div
+      className="
+        space-y-6
+        pb-8
+      "
+    >
+
+      {/* =============================================== */}
+      {/* HEADER                                          */}
+      {/* =============================================== */}
+
       <PageHeader
         title="Appointments"
         description={
           isPatient
             ? "Review and manage your healthcare appointments."
-            : "Review patient appointment requests and scheduled consultations."
+            : "Review appointment requests, scheduled consultations and patient visits."
         }
       />
 
+
+      {/* =============================================== */}
+      {/* ACTION ERROR                                    */}
+      {/* =============================================== */}
+
+      {actionError && (
+        <div
+          role="alert"
+          className="
+            rounded-xl
+            border
+            border-rose-200
+            bg-rose-50
+            p-4
+            text-sm
+            text-rose-700
+          "
+        >
+          {actionError}
+        </div>
+      )}
+
+
+      {/* =============================================== */}
+      {/* LOADING                                         */}
+      {/* =============================================== */}
 
       {isLoading && (
         <div
@@ -223,17 +433,26 @@ export default function AppointmentsPage() {
             border
             border-slate-200
             bg-white
-            p-8
+            p-10
             text-center
             shadow-sm
           "
         >
-          <p className="text-sm text-slate-500">
+          <p
+            className="
+              text-sm
+              text-slate-500
+            "
+          >
             Loading appointments...
           </p>
         </div>
       )}
 
+
+      {/* =============================================== */}
+      {/* QUERY ERROR                                     */}
+      {/* =============================================== */}
 
       {isError && (
         <div
@@ -256,6 +475,10 @@ export default function AppointmentsPage() {
       )}
 
 
+      {/* =============================================== */}
+      {/* EMPTY STATE                                     */}
+      {/* =============================================== */}
+
       {!isLoading
         && !isError
         && appointments.length
@@ -266,7 +489,7 @@ export default function AppointmentsPage() {
             border
             border-slate-200
             bg-white
-            p-8
+            p-10
             text-center
             shadow-sm
           "
@@ -295,81 +518,159 @@ export default function AppointmentsPage() {
       )}
 
 
-      <div className="space-y-4">
-        {appointments.map(
-          (appointment) => (
-            <AppointmentCard
-              key={
-                appointment.id
-              }
-              appointment={
-                appointment
-              }
-              role={
-                user.role
-              }
-              pending={
-                pending
-              }
-              onApprove={(
-                item
-              ) =>
-                approveMutation.mutate(
-                  item.id
-                )
-              }
-              onReject={(
-                item
-              ) => {
-                const reason =
-                  window.prompt(
-                    "Reason for rejection (optional):"
+      {/* =============================================== */}
+      {/* APPOINTMENT LIST                                */}
+      {/* =============================================== */}
+
+      {!isLoading
+        && !isError
+        && appointments.length
+        > 0 && (
+        <div
+          className="
+            space-y-4
+          "
+        >
+          {appointments.map(
+            (
+              appointment
+            ) => (
+              <AppointmentCard
+                key={
+                  appointment.id
+                }
+
+                appointment={
+                  appointment
+                }
+
+                role={
+                  user.role
+                }
+
+                pending={
+                  pending
+                }
+
+
+                // ======================================
+                // DOCTOR: APPROVE
+                // ======================================
+
+                onApprove={(
+                  item
+                ) => {
+                  approveMutation.mutate(
+                    item.id
                   );
+                }}
 
-                rejectMutation.mutate({
-                  id:
-                    item.id,
 
-                  reason:
-                    reason
-                    || null,
-                });
-              }}
-              onCancel={(
-                item
-              ) => {
-                const reason =
-                  window.prompt(
-                    "Reason for cancellation (optional):"
+                // ======================================
+                // DOCTOR: REJECT
+                // ======================================
+
+                onReject={(
+                  item
+                ) => {
+                  const reason =
+                    window.prompt(
+                      "Reason for rejection (optional):"
+                    );
+
+                  // User pressed Cancel
+                  if (
+                    reason === null
+                  ) {
+                    return;
+                  }
+
+                  rejectMutation.mutate({
+                    id:
+                      item.id,
+
+                    reason:
+                      reason.trim()
+                      || null,
+                  });
+                }}
+
+
+                // ======================================
+                // PATIENT: CANCEL
+                // ======================================
+
+                onCancel={(
+                  item
+                ) => {
+                  const reason =
+                    window.prompt(
+                      "Reason for cancellation (optional):"
+                    );
+
+                  // User pressed Cancel
+                  if (
+                    reason === null
+                  ) {
+                    return;
+                  }
+
+                  cancelMutation.mutate({
+                    id:
+                      item.id,
+
+                    reason:
+                      reason.trim()
+                      || null,
+                  });
+                }}
+
+
+                // ======================================
+                // DOCTOR: START CONSULTATION
+                // ======================================
+
+                onStartConsultation={(
+                  item
+                ) => {
+                  startEncounterMutation.mutate({
+                    appointmentId:
+                      item.id,
+
+                    chiefComplaint:
+                      item.reason
+                      || null,
+                  });
+                }}
+
+
+                // ======================================
+                // DOCTOR: NO SHOW
+                // ======================================
+
+                onNoShow={(
+                  item
+                ) => {
+                  const confirmed =
+                    window.confirm(
+                      "Mark this patient as no-show?"
+                    );
+
+                  if (
+                    !confirmed
+                  ) {
+                    return;
+                  }
+
+                  noShowMutation.mutate(
+                    item.id
                   );
-
-                cancelMutation.mutate({
-                  id:
-                    item.id,
-
-                  reason:
-                    reason
-                    || null,
-                });
-              }}
-              onComplete={(
-                item
-              ) =>
-                completeMutation.mutate(
-                  item.id
-                )
-              }
-              onNoShow={(
-                item
-              ) =>
-                noShowMutation.mutate(
-                  item.id
-                )
-              }
-            />
-          )
-        )}
-      </div>
+                }}
+              />
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -25,8 +25,23 @@ from app.api.v1.discovery import (
 from app.api.v1.appointments import (
     router as appointments_router,
 )
+from app.api.v1.encounters import (
+    router as encounters_router,
+)
 
+from app.api.v1.diagnoses import (
+    router as diagnoses_router,
+)
+from app.api.v1.prescriptions import (
+    router as prescriptions_router,
+)
+from app.api.v1.medical_documents import (
+    router as medical_documents_router,
+)
 
+from app.api.v1.medical_access import (
+    router as medical_access_router,
+)
 
 app = FastAPI(
     title=settings.app_name,
@@ -86,5 +101,30 @@ app.include_router(
 
 app.include_router(
     appointments_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    encounters_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    diagnoses_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    prescriptions_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    medical_documents_router,
+    prefix="/api/v1",
+)
+
+app.include_router(
+    medical_access_router,
     prefix="/api/v1",
 )

@@ -23,6 +23,28 @@ from app.services.patient import (
     update_my_patient_profile,
 )
 
+from app.schemas.patient_dashboard import (
+    PatientDashboardResponse,
+)
+
+from app.services.patient_dashboard import (
+    get_patient_dashboard,
+)
+
+from app.api.dependencies import (
+    get_current_patient,
+)
+
+from app.schemas.medical_history import (
+    MedicalHistoryResponse,
+)
+
+from app.services.medical_history import (
+    get_patient_medical_history,
+)
+
+from app.models.patient import Patient
+
 
 router = APIRouter(
     prefix="/patients",
@@ -80,4 +102,42 @@ def update_my_profile(
         db,
         current_user,
         payload,
+    )
+    
+
+@router.get(
+    "/me/dashboard",
+    response_model=PatientDashboardResponse,
+)
+def patient_dashboard(
+    patient: Patient = Depends(
+        get_current_patient
+    ),
+
+    db: Session = Depends(
+        get_db
+    ),
+):
+    return get_patient_dashboard(
+        db,
+        patient,
+    )
+    
+    
+@router.get(
+    "/me/history",
+    response_model=MedicalHistoryResponse,
+)
+def my_medical_history(
+    patient=Depends(
+        get_current_patient
+    ),
+
+    db: Session = Depends(
+        get_db
+    ),
+):
+    return get_patient_medical_history(
+        db,
+        patient,
     )

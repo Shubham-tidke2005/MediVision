@@ -8,6 +8,8 @@ import {
 
 import DoctorDashboardPage from "@/features/dashboard/pages/DoctorDashboardPage";
 
+import PatientDashboardPage from "@/features/dashboard/pages/PatientDashboardPage";
+
 import PlaceholderPage from "@/pages/PlaceholderPage";
 
 
@@ -24,23 +26,20 @@ export default function DashboardPage() {
 
   if (
     user.role
-    === ROLES.DOCTOR
+    === ROLES.PATIENT
   ) {
     return (
-      <DoctorDashboardPage />
+      <PatientDashboardPage />
     );
   }
 
 
   if (
     user.role
-    === ROLES.PATIENT
+    === ROLES.DOCTOR
   ) {
     return (
-      <PlaceholderPage
-        title="Patient Dashboard"
-        description="Your health overview, upcoming appointments and personal healthcare activity."
-      />
+      <DoctorDashboardPage />
     );
   }
 

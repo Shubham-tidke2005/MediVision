@@ -1,10 +1,21 @@
 import {
+  Navigate,
   Route,
   Routes,
 } from "react-router-dom";
 
+
+// ======================================================
+// LAYOUTS
+// ======================================================
+
 import AppShell from "@/components/layout/AppShell";
 import PublicLayout from "@/components/public/PublicLayout";
+
+
+// ======================================================
+// CONSTANTS
+// ======================================================
 
 import {
   ROLES,
@@ -51,6 +62,27 @@ import PatientProfilePage from "@/features/patient/pages/PatientProfilePage";
 
 
 // ======================================================
+// PHASE 26 — MEDICAL HISTORY
+// ======================================================
+
+import PatientHistoryPage from "@/features/history/pages/PatientHistoryPage";
+
+
+// ======================================================
+// PHASE 27 — MEDICAL DOCUMENTS
+// ======================================================
+
+import PatientDocumentsPage from "@/features/documents/pages/PatientDocumentsPage";
+
+
+// ======================================================
+// PHASE 28 — MEDICAL ACCESS CONTROL
+// ======================================================
+
+import PatientAccessPage from "@/features/access/pages/PatientAccessPage";
+
+
+// ======================================================
 // DOCTOR
 // ======================================================
 
@@ -75,6 +107,16 @@ import DoctorDetailPage from "@/features/discovery/pages/DoctorDetailPage";
 import AppointmentsPage from "@/features/appointments/pages/AppointmentsPage";
 
 
+// ======================================================
+// CLINICAL ENCOUNTERS
+// ======================================================
+
+import EncounterPage from "@/features/encounters/pages/EncounterPage";
+
+
+// ======================================================
+// APP ROUTES
+// ======================================================
 
 export default function AppRoutes() {
   return (
@@ -185,8 +227,8 @@ export default function AppRoutes() {
 
 
           {/* ============================================= */}
-          {/* APPOINTMENTS                                   */}
-          {/* PATIENT + DOCTOR                               */}
+          {/* APPOINTMENTS                                  */}
+          {/* PATIENT + DOCTOR                              */}
           {/* ============================================= */}
 
           <Route
@@ -209,8 +251,8 @@ export default function AppRoutes() {
 
 
           {/* ============================================= */}
-          {/* NOTIFICATIONS                                  */}
-          {/* PATIENT + DOCTOR + ADMIN                       */}
+          {/* NOTIFICATIONS                                 */}
+          {/* PATIENT + DOCTOR + ADMIN                      */}
           {/* ============================================= */}
 
           <Route
@@ -237,7 +279,7 @@ export default function AppRoutes() {
 
 
           {/* ============================================= */}
-          {/* PATIENT ROUTES                                 */}
+          {/* PATIENT ROUTES                                */}
           {/* ============================================= */}
 
           <Route
@@ -250,7 +292,9 @@ export default function AppRoutes() {
             }
           >
 
-            {/* Patient Profile */}
+            {/* =========================================== */}
+            {/* PATIENT PROFILE                             */}
+            {/* =========================================== */}
 
             <Route
               path="/patient/profile"
@@ -260,20 +304,60 @@ export default function AppRoutes() {
             />
 
 
-            {/* Medical History */}
+            {/* =========================================== */}
+            {/* PHASE 26 — DIGITAL MEDICAL HISTORY          */}
+            {/* =========================================== */}
+
+            <Route
+              path="/patient/history"
+              element={
+                <PatientHistoryPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* OLD MEDICAL HISTORY URL                     */}
+            {/* =========================================== */}
 
             <Route
               path="/medical-history"
               element={
-                <PlaceholderPage
-                  title="Medical History"
-                  description="View your medical and clinical records."
+                <Navigate
+                  to="/patient/history"
+                  replace
                 />
               }
             />
 
 
-            {/* Health Tracking */}
+            {/* =========================================== */}
+            {/* PHASE 27 — MEDICAL DOCUMENTS                */}
+            {/* =========================================== */}
+
+            <Route
+              path="/patient/documents"
+              element={
+                <PatientDocumentsPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* PHASE 28 — MEDICAL ACCESS CONTROL           */}
+            {/* =========================================== */}
+
+            <Route
+              path="/patient/access"
+              element={
+                <PatientAccessPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* HEALTH TRACKING                             */}
+            {/* =========================================== */}
 
             <Route
               path="/health"
@@ -286,7 +370,9 @@ export default function AppRoutes() {
             />
 
 
-            {/* AI Symptom Assessment */}
+            {/* =========================================== */}
+            {/* AI SYMPTOM ASSESSMENT                       */}
+            {/* =========================================== */}
 
             <Route
               path="/symptom-assessment"
@@ -299,7 +385,9 @@ export default function AppRoutes() {
             />
 
 
-            {/* Medical Image AI */}
+            {/* =========================================== */}
+            {/* MEDICAL IMAGE AI                            */}
+            {/* =========================================== */}
 
             <Route
               path="/medical-image"
@@ -331,7 +419,9 @@ export default function AppRoutes() {
             />
 
 
-            {/* Nearby Healthcare */}
+            {/* =========================================== */}
+            {/* NEARBY HEALTHCARE                           */}
+            {/* =========================================== */}
 
             <Route
               path="/nearby"
@@ -344,7 +434,9 @@ export default function AppRoutes() {
             />
 
 
-            {/* Diet & Routine */}
+            {/* =========================================== */}
+            {/* DIET & ROUTINE                              */}
+            {/* =========================================== */}
 
             <Route
               path="/wellness"
@@ -355,11 +447,12 @@ export default function AppRoutes() {
                 />
               }
             />
+
           </Route>
 
 
           {/* ============================================= */}
-          {/* DOCTOR ROUTES                                  */}
+          {/* DOCTOR ROUTES                                 */}
           {/* ============================================= */}
 
           <Route
@@ -372,7 +465,9 @@ export default function AppRoutes() {
             }
           >
 
-            {/* Doctor Profile */}
+            {/* =========================================== */}
+            {/* DOCTOR PROFILE                              */}
+            {/* =========================================== */}
 
             <Route
               path="/doctor/profile"
@@ -382,7 +477,9 @@ export default function AppRoutes() {
             />
 
 
-            {/* Doctor Availability */}
+            {/* =========================================== */}
+            {/* DOCTOR AVAILABILITY                         */}
+            {/* =========================================== */}
 
             <Route
               path="/doctor/availability"
@@ -392,7 +489,21 @@ export default function AppRoutes() {
             />
 
 
-            {/* Patient Records */}
+            {/* =========================================== */}
+            {/* CLINICAL ENCOUNTER                          */}
+            {/* =========================================== */}
+
+            <Route
+              path="/doctor/encounters/:encounterId"
+              element={
+                <EncounterPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* PATIENT RECORDS                             */}
+            {/* =========================================== */}
 
             <Route
               path="/doctor/patients"
@@ -403,11 +514,12 @@ export default function AppRoutes() {
                 />
               }
             />
+
           </Route>
 
 
           {/* ============================================= */}
-          {/* ADMIN ROUTES                                   */}
+          {/* ADMIN ROUTES                                  */}
           {/* ============================================= */}
 
           <Route
@@ -420,7 +532,9 @@ export default function AppRoutes() {
             }
           >
 
-            {/* Doctor Verification */}
+            {/* =========================================== */}
+            {/* DOCTOR VERIFICATION                         */}
+            {/* =========================================== */}
 
             <Route
               path="/admin/doctors"
@@ -433,7 +547,9 @@ export default function AppRoutes() {
             />
 
 
-            {/* Audit Logs */}
+            {/* =========================================== */}
+            {/* AUDIT LOGS                                  */}
+            {/* =========================================== */}
 
             <Route
               path="/admin/audit"
@@ -444,6 +560,7 @@ export default function AppRoutes() {
                 />
               }
             />
+
           </Route>
 
         </Route>

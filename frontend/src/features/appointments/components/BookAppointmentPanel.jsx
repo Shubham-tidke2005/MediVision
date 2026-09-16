@@ -76,21 +76,31 @@ export default function BookAppointmentPanel({
           setPatientNotes("");
 
           await Promise.all([
-            queryClient
-              .invalidateQueries({
-                queryKey: [
-                  "doctor-available-slots",
-                  doctorId,
-                ],
-              }),
+  queryClient.invalidateQueries({
+    queryKey: [
+      "doctor-available-slots",
+      doctorId,
+    ],
+  }),
 
-            queryClient
-              .invalidateQueries({
-                queryKey: [
-                  "patient-appointments",
-                ],
-              }),
-          ]);
+  queryClient.invalidateQueries({
+    queryKey: [
+      "patient-appointments",
+    ],
+  }),
+
+  queryClient.invalidateQueries({
+    queryKey: [
+      "patient-dashboard",
+    ],
+  }),
+
+  queryClient.invalidateQueries({
+    queryKey: [
+      "doctor-dashboard",
+    ],
+  }),
+]);
         },
 
       onError:

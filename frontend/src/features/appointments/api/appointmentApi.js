@@ -2,6 +2,10 @@ import {
   apiClient,
 } from "@/api/client";
 
+import {
+  startEncounter,
+} from "@/features/encounters/api/encounterApi";
+
 
 export async function requestAppointment(
   payload

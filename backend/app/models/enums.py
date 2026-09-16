@@ -34,3 +34,27 @@ class AppointmentStatus(str, Enum):
     CANCELLED = "CANCELLED"
     COMPLETED = "COMPLETED"
     NO_SHOW = "NO_SHOW"
+    
+class EncounterType(str, Enum):
+    IN_PERSON = "IN_PERSON"
+    ONLINE = "ONLINE"
+    EMERGENCY = "EMERGENCY"
+    FOLLOW_UP = "FOLLOW_UP"
+    
+
+class DiagnosisType(str, Enum):
+    PRIMARY = "PRIMARY"
+    SECONDARY = "SECONDARY"
+    SUSPECTED = "SUSPECTED"
+    
+    
+class DocumentType(str, Enum):
+    LAB_REPORT = "LAB_REPORT"
+    PRESCRIPTION = "PRESCRIPTION"
+    MRI = "MRI"
+    XRAY = "XRAY"
+    DISCHARGE_SUMMARY = "DISCHARGE_SUMMARY"
+    
+class AccessScope(str, Enum):
+    FULL_HISTORY = "FULL_HISTORY"
+    APPOINTMENT_ONLY = "APPOINTMENT_ONLY"
