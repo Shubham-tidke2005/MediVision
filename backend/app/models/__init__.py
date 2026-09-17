@@ -35,6 +35,11 @@ from app.models.medication_reminder import (
     PatientMedication,
 )
 
+from app.models.health import (
+    HealthMeasurement,
+    HealthMetricType,
+)
+
 __all__ = [
     "User",
     "Address",

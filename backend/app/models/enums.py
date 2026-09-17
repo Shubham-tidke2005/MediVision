@@ -75,3 +75,9 @@ class AdherenceStatus(str, Enum):
     MISSED = "MISSED"
     SKIPPED = "SKIPPED"
     LATE = "LATE"
+    
+    
+class MetricSource(str, Enum):
+    MANUAL = "MANUAL"
+    DEVICE = "DEVICE"
+    IMPORTED = "IMPORTED"

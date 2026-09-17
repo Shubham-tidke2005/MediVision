@@ -120,6 +120,11 @@ import PatientMedicationsPage
 // APP ROUTES
 // ======================================================
 
+
+
+import PatientHealthPage
+  from "@/features/health/pages/PatientHealthPage";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -369,15 +374,11 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-              path="/health"
-              element={
-                <PlaceholderPage
-                  title="Health Tracking"
-                  description="Track health measurements and trends."
-                />
-              }
-            />
-
+  path="/health"
+  element={
+    <PatientHealthPage />
+  }
+/>
 
             {/* =========================================== */}
             {/* AI SYMPTOM ASSESSMENT                       */}
