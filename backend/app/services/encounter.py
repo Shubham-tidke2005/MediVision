@@ -311,55 +311,55 @@ def update_encounter(
     encounter_id: uuid.UUID,
     payload: EncounterUpdateRequest,
 ):
-    encounter = (
-        get_encounter_for_update(
+    try:
+        encounter = get_encounter_for_update(
             db,
             encounter_id,
         )
-    )
 
-    if (
-        encounter is None
-        or encounter.doctor_id
-        != doctor.id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Encounter not found.",
-        )
+        if (
+            encounter is None
+            or encounter.doctor_id != doctor.id
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Encounter not found.",
+            )
 
-    if encounter.ended_at is not None:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=(
-                "Completed encounters "
-                "cannot be edited."
-            ),
-        )
+        if encounter.ended_at is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "Completed encounters "
+                    "cannot be edited."
+                ),
+            )
 
-    update_data = (
-        payload.model_dump(
+        update_data = payload.model_dump(
             exclude_unset=True
         )
-    )
 
-    for (
-        field,
-        value,
-    ) in update_data.items():
-        setattr(
-            encounter,
-            field,
-            value,
-        )
+        for field, value in update_data.items():
+            setattr(
+                encounter,
+                field,
+                value,
+            )
 
-    db.commit()
+        db.commit()
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception:
+        db.rollback()
+        raise
 
     return get_serialized_encounter(
         db,
         encounter.id,
     )
-
 
 def complete_encounter(
     db: Session,

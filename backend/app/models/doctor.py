@@ -9,22 +9,38 @@ from sqlalchemy import (
     DateTime,
     Enum as SQLEnum,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
     Text,
     func,
+    text,
 )
+
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship,
+)
 
 from app.core.database import Base
-from app.models.enums import DoctorVerificationStatus
+
+from app.models.enums import (
+    DoctorVerificationStatus,
+)
 
 
 if TYPE_CHECKING:
     from app.models.address import Address
     from app.models.user import User
+
+
+# =========================================================
+# DOCTOR
+# =========================================================
 
 
 class Doctor(Base):
@@ -105,6 +121,7 @@ class Doctor(Base):
         nullable=True,
     )
 
+    # New Doctors start as PENDING.
     verification_status: Mapped[
         DoctorVerificationStatus
     ] = mapped_column(
@@ -118,11 +135,13 @@ class Doctor(Base):
         index=True,
     )
 
+    # A new Doctor should not accept Patients
+    # until verification/business rules allow it.
     is_accepting_patients: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
-        default=True,
-        server_default="true",
+        default=False,
+        server_default="false",
     )
 
     is_active: Mapped[bool] = mapped_column(
@@ -154,6 +173,10 @@ class Doctor(Base):
         onupdate=func.now(),
     )
 
+    # -----------------------------------------------------
+    # RELATIONSHIPS
+    # -----------------------------------------------------
+
     user: Mapped["User"] = relationship(
         back_populates="doctor",
     )
@@ -166,6 +189,11 @@ class Doctor(Base):
         back_populates="doctor",
         cascade="all, delete-orphan",
     )
+
+
+# =========================================================
+# SPECIALTY
+# =========================================================
 
 
 class Specialty(Base):
@@ -201,8 +229,24 @@ class Specialty(Base):
     )
 
 
+# =========================================================
+# DOCTOR SPECIALTY
+# =========================================================
+
+
 class DoctorSpecialty(Base):
     __tablename__ = "doctor_specialties"
+
+    __table_args__ = (
+        Index(
+            "uq_doctor_primary_specialty",
+            "doctor_id",
+            unique=True,
+            postgresql_where=text(
+                "is_primary = true"
+            ),
+        ),
+    )
 
     doctor_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
