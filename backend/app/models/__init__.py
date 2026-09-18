@@ -39,6 +39,7 @@ from app.models.health import (
     HealthMeasurement,
     HealthMetricType,
 )
+from app.models.symptom import Symptom
 
 __all__ = [
     "User",
@@ -47,4 +48,5 @@ __all__ = [
     "Doctor",
     "Specialty",
     "DoctorSpecialty",
+    "Symptom",
 ]
