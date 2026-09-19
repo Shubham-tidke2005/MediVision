@@ -125,6 +125,10 @@ import PatientMedicationsPage
 import PatientHealthPage
   from "@/features/health/pages/PatientHealthPage";
 
+
+import SymptomAssessmentPage
+  from "@/features/symptomAssessment/pages/SymptomAssessmentPage";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -385,14 +389,11 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-              path="/symptom-assessment"
-              element={
-                <PlaceholderPage
-                  title="AI Symptom Assessment"
-                  description="AI-assisted symptom and risk assessment."
-                />
-              }
-            />
+  path="/symptom-assessment"
+  element={
+    <SymptomAssessmentPage />
+  }
+/>
 
 
             {/* =========================================== */}

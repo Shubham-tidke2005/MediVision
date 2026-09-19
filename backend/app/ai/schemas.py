@@ -46,23 +46,24 @@ class PossibleCondition(BaseModel):
 
 RecommendedSpecialty = Literal[
     "GENERAL_MEDICINE",
-    "NEUROLOGY",
     "CARDIOLOGY",
+    "NEUROLOGY",
+    "DERMATOLOGY",
+    "ORTHOPEDICS",
+    "PSYCHIATRY",
+    "ENT",
+    "OPHTHALMOLOGY",
+    "PEDIATRICS",
+    "GYNECOLOGY",
     "PULMONOLOGY",
     "GASTROENTEROLOGY",
-    "DERMATOLOGY",
-    "ENT",
-    "ORTHOPEDICS",
-    "OPHTHALMOLOGY",
-    "GYNECOLOGY",
     "UROLOGY",
-    "PSYCHIATRY",
     "EMERGENCY_MEDICINE",
 ]
 
 
 # =========================================================
-# URGENCY
+# URGENCY.
 # =========================================================
 
 

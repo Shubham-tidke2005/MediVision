@@ -31,6 +31,10 @@ from app.api.v1.discovery import (
     router as discovery_router,
 )
 
+from app.api.v1.recommended_doctors import (
+    router as recommended_doctors_router,
+)
+
 from app.api.v1.appointments import (
     router as appointments_router,
 )
@@ -72,6 +76,7 @@ from app.api.routes.ai import (
 # FASTAPI APPLICATION
 # =========================================================
 
+
 app = FastAPI(
     title=settings.app_name,
     version="1.0.0",
@@ -82,95 +87,126 @@ app = FastAPI(
 # CORS
 # =========================================================
 
+
 app.add_middleware(
     CORSMiddleware,
+
     allow_origins=[
         settings.frontend_url,
     ],
+
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+
+    allow_methods=[
+        "*",
+    ],
+
+    allow_headers=[
+        "*",
+    ],
 )
 
 
 # =========================================================
-# API ROUTERS
+# ROUTERS
 # =========================================================
+
 
 app.include_router(
     auth_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     access_test_router,
     prefix="/api/v1",
 )
+
 
 app.include_router(
     patients_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     doctors_router,
     prefix="/api/v1",
 )
+
 
 app.include_router(
     availability_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     discovery_router,
     prefix="/api/v1",
 )
+
+
+app.include_router(
+    recommended_doctors_router,
+    prefix="/api/v1",
+)
+
 
 app.include_router(
     appointments_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     encounters_router,
     prefix="/api/v1",
 )
+
 
 app.include_router(
     diagnoses_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     prescriptions_router,
     prefix="/api/v1",
 )
+
 
 app.include_router(
     medical_documents_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     medical_access_router,
     prefix="/api/v1",
 )
+
 
 app.include_router(
     medication_reminders_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     health_router,
     prefix="/api/v1",
 )
 
+
 app.include_router(
     symptom_router,
     prefix="/api/v1",
 )
+
 
 app.include_router(
     ai_router,

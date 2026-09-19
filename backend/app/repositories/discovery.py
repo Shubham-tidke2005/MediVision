@@ -27,6 +27,11 @@ from app.models.enums import (
 )
 
 
+# =========================================================
+# SPECIALTIES
+# =========================================================
+
+
 def get_active_specialties(
     db: Session,
 ):
@@ -45,6 +50,39 @@ def get_active_specialties(
     )
 
 
+def get_active_specialty_by_code(
+    db: Session,
+    specialty_code: str,
+):
+    """
+    Find an active specialty using the stable
+    machine-readable specialty code.
+
+    Examples:
+
+    DERMATOLOGY
+    NEUROLOGY
+    CARDIOLOGY
+    """
+
+    return db.scalar(
+        select(Specialty)
+        .where(
+            Specialty.code
+            == specialty_code,
+
+            Specialty.is_active.is_(
+                True
+            ),
+        )
+    )
+
+
+# =========================================================
+# DOCTOR SEARCH
+# =========================================================
+
+
 def search_verified_doctors(
     db: Session,
     *,
@@ -54,6 +92,14 @@ def search_verified_doctors(
     page: int,
     page_size: int,
 ):
+    """
+    Existing normal Doctor discovery.
+
+    Important:
+    Phase 34 reuses this function instead of allowing
+    the AI to invent or select Doctors.
+    """
+
     stmt = (
         select(Doctor)
         .where(
@@ -71,6 +117,10 @@ def search_verified_doctors(
     )
 
 
+    # =====================================================
+    # TEXT SEARCH
+    # =====================================================
+
     if search:
         search_value = (
             f"%{search.strip()}%"
@@ -81,18 +131,25 @@ def search_verified_doctors(
                 Doctor.first_name.ilike(
                     search_value
                 ),
+
                 Doctor.last_name.ilike(
                     search_value
                 ),
+
                 Doctor.qualification.ilike(
                     search_value
                 ),
+
                 Doctor.doctor_code.ilike(
                     search_value
                 ),
             )
         )
 
+
+    # =====================================================
+    # SPECIALTY FILTER
+    # =====================================================
 
     if specialty_id is not None:
         specialty_exists = (
@@ -114,6 +171,10 @@ def search_verified_doctors(
         )
 
 
+    # =====================================================
+    # CITY FILTER
+    # =====================================================
+
     if city:
         stmt = (
             stmt
@@ -131,6 +192,10 @@ def search_verified_doctors(
         )
 
 
+    # =====================================================
+    # COUNT
+    # =====================================================
+
     count_stmt = (
         select(
             func.count()
@@ -142,6 +207,7 @@ def search_verified_doctors(
         )
     )
 
+
     total = (
         db.scalar(
             count_stmt
@@ -149,6 +215,10 @@ def search_verified_doctors(
         or 0
     )
 
+
+    # =====================================================
+    # PAGINATION
+    # =====================================================
 
     offset = (
         page - 1
@@ -162,13 +232,25 @@ def search_verified_doctors(
                 Doctor.first_name,
                 Doctor.last_name,
             )
-            .offset(offset)
-            .limit(page_size)
+            .offset(
+                offset
+            )
+            .limit(
+                page_size
+            )
         ).all()
     )
 
 
-    return doctors, total
+    return (
+        doctors,
+        total,
+    )
+
+
+# =========================================================
+# ONE DISCOVERABLE DOCTOR
+# =========================================================
 
 
 def get_discoverable_doctor(
@@ -178,7 +260,8 @@ def get_discoverable_doctor(
     return db.scalar(
         select(Doctor)
         .where(
-            Doctor.id == doctor_id,
+            Doctor.id
+            == doctor_id,
 
             Doctor.verification_status
             == DoctorVerificationStatus.VERIFIED,
@@ -194,17 +277,26 @@ def get_discoverable_doctor(
     )
 
 
+# =========================================================
+# SPECIALTIES FOR DOCTORS
+# =========================================================
+
+
 def get_specialties_for_doctors(
     db: Session,
-    doctor_ids: list[uuid.UUID],
+    doctor_ids: list[
+        uuid.UUID
+    ],
 ):
     if not doctor_ids:
         return {}
+
 
     rows = db.execute(
         select(
             DoctorSpecialty.doctor_id,
             Specialty.id,
+            Specialty.code,
             Specialty.name,
             DoctorSpecialty.is_primary,
         )
@@ -227,12 +319,15 @@ def get_specialties_for_doctors(
 
     result = {}
 
+
     for (
         doctor_id,
         specialty_id,
+        specialty_code,
         specialty_name,
         is_primary,
     ) in rows:
+
         result.setdefault(
             doctor_id,
             [],
@@ -240,6 +335,9 @@ def get_specialties_for_doctors(
             {
                 "id":
                     specialty_id,
+
+                "code":
+                    specialty_code,
 
                 "name":
                     specialty_name,
@@ -249,22 +347,34 @@ def get_specialties_for_doctors(
             }
         )
 
+
     return result
+
+
+# =========================================================
+# ADDRESSES FOR DOCTORS
+# =========================================================
 
 
 def get_addresses_for_doctors(
     db: Session,
-    doctors: list[Doctor],
+    doctors: list[
+        Doctor
+    ],
 ):
     address_ids = [
         doctor.address_id
+
         for doctor in doctors
+
         if doctor.address_id
         is not None
     ]
 
+
     if not address_ids:
         return {}
+
 
     addresses = list(
         db.scalars(
@@ -277,10 +387,19 @@ def get_addresses_for_doctors(
         ).all()
     )
 
+
     return {
-        address.id: address
-        for address in addresses
+        address.id:
+            address
+
+        for address
+        in addresses
     }
+
+
+# =========================================================
+# AVAILABLE SLOTS
+# =========================================================
 
 
 def get_available_slots(
@@ -289,6 +408,12 @@ def get_available_slots(
     start_at: datetime,
     end_at: datetime,
 ):
+    """
+    Real slots from PostgreSQL.
+
+    AI never creates slot times.
+    """
+
     return list(
         db.scalars(
             select(
