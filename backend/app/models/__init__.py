@@ -40,6 +40,14 @@ from app.models.health import (
     HealthMetricType,
 )
 from app.models.symptom import Symptom
+from app.models.ai_symptom_assessment import (
+    AISymptomAssessment,
+)
+
+from app.models.diet import (
+    DietPlan,
+    DietPlanItem,
+)
 
 __all__ = [
     "User",

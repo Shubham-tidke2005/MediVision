@@ -45,6 +45,10 @@ from app.services.ai_symptom_assessment import (
     create_symptom_assessment,
 )
 
+from app.api.dependencies import (
+    get_current_patient,
+)
+
 
 router = APIRouter(
     prefix="/ai",
@@ -179,3 +183,27 @@ def assess_symptoms(
         raise_ai_http_error(
             exc
         )
+        
+
+@router.post(
+    "/symptom-assessments",
+    response_model=(
+        SymptomAssessmentResponse
+    ),
+)
+def assess_symptoms(
+    payload: SymptomAssessmentCreate,
+
+    db: Session = Depends(
+        get_db
+    ),
+
+    patient=Depends(
+        get_current_patient
+    ),
+):
+    return create_symptom_assessment(
+        db=db,
+        payload=payload,
+        patient=patient,
+    )

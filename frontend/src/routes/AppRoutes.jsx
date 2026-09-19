@@ -129,6 +129,9 @@ import PatientHealthPage
 import SymptomAssessmentPage
   from "@/features/symptomAssessment/pages/SymptomAssessmentPage";
 
+
+import WellnessPage from "@/features/wellness/pages/WellnessPage";
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -450,14 +453,11 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-              path="/wellness"
-              element={
-                <PlaceholderPage
-                  title="Diet & Routine"
-                  description="Manage personalized diet and routine plans."
-                />
-              }
-            />
+  path="/wellness"
+  element={
+    <WellnessPage />
+  }
+/>
 
           </Route>
 

@@ -38,6 +38,21 @@ class PossibleCondition(BaseModel):
         max_length=500,
     )
 
+    # Phase 35:
+    # Only canonical symptom codes actually reported
+    # by the Patient should be returned here.
+    #
+    # Example:
+    #
+    # [
+    #     "HEADACHE",
+    #     "NAUSEA"
+    # ]
+    relevant_symptom_codes: list[str] = Field(
+        min_length=1,
+        max_length=10,
+    )
+
 
 # =========================================================
 # SPECIALTY
@@ -78,10 +93,7 @@ AssessmentUrgency = Literal[
 # AI SYMPTOM ASSESSMENT
 # =========================================================
 
-
-class SymptomAssessmentAIResponse(
-    BaseModel
-):
+class SymptomAssessmentAIResponse(BaseModel):
     possible_conditions: list[
         PossibleCondition
     ] = Field(
@@ -91,6 +103,12 @@ class SymptomAssessmentAIResponse(
 
     recommended_specialty: (
         RecommendedSpecialty
+    )
+
+    # Phase 35
+    specialty_reason: str = Field(
+        min_length=1,
+        max_length=500,
     )
 
     urgency: AssessmentUrgency

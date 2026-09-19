@@ -70,7 +70,9 @@ from app.api.routes.symptom import (
 from app.api.routes.ai import (
     router as ai_router,
 )
-
+from app.api.routes.diet import (
+    router as diet_router,
+)
 
 # =========================================================
 # FASTAPI APPLICATION
@@ -211,4 +213,8 @@ app.include_router(
 app.include_router(
     ai_router,
     prefix="/api/v1",
+)
+
+app.include_router(
+    diet_router
 )

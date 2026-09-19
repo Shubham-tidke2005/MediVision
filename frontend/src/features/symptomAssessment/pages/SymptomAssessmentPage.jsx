@@ -13,10 +13,13 @@ import {
   Brain,
   CalendarDays,
   CheckCircle2,
+  ChevronRight,
   Clock3,
+  Info,
   LoaderCircle,
   Search,
   ShieldAlert,
+  Sparkles,
   Stethoscope,
   UserRound,
 } from "lucide-react";
@@ -33,19 +36,53 @@ import {
 
 
 // ======================================================
-// HELPERS
+// ERROR HELPER
 // ======================================================
 
 
 function getErrorMessage(
   error
 ) {
+  const detail =
+    error?.response?.data?.detail;
+
+
+  if (
+    typeof detail
+    === "string"
+  ) {
+    return detail;
+  }
+
+
+  if (
+    detail
+    && typeof detail
+      === "object"
+  ) {
+    if (
+      typeof detail.message
+      === "string"
+    ) {
+      return detail.message;
+    }
+
+    return (
+      "The request could not be completed."
+    );
+  }
+
+
   return (
-    error?.response?.data?.detail
-    || error?.message
+    error?.message
     || "Something went wrong."
   );
 }
+
+
+// ======================================================
+// FORMAT SPECIALTY
+// ======================================================
 
 
 function formatSpecialtyCode(
@@ -55,9 +92,13 @@ function formatSpecialtyCode(
     return "";
   }
 
-  if (code === "ENT") {
+
+  if (
+    code === "ENT"
+  ) {
     return "ENT";
   }
+
 
   return code
     .toLowerCase()
@@ -72,12 +113,33 @@ function formatSpecialtyCode(
 }
 
 
+// ======================================================
+// FORMAT SLOT
+// ======================================================
+
+
 function formatSlot(
   value
 ) {
   if (!value) {
     return "";
   }
+
+
+  const date =
+    new Date(
+      value
+    );
+
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return value;
+  }
+
 
   return new Intl.DateTimeFormat(
     undefined,
@@ -89,11 +151,14 @@ function formatSlot(
         "short",
     }
   ).format(
-    new Date(
-      value
-    )
+    date
   );
 }
+
+
+// ======================================================
+// URGENCY STYLES
+// ======================================================
 
 
 function urgencyClasses(
@@ -110,6 +175,7 @@ function urgencyClasses(
     );
   }
 
+
   if (
     urgency
     === "URGENT"
@@ -121,6 +187,7 @@ function urgencyClasses(
     );
   }
 
+
   return (
     "border-emerald-200 "
     + "bg-emerald-50 "
@@ -130,7 +197,7 @@ function urgencyClasses(
 
 
 // ======================================================
-// PAGE
+// MAIN PAGE
 // ======================================================
 
 
@@ -158,7 +225,7 @@ export default function SymptomAssessmentPage() {
 
 
   // ====================================================
-  // SYMPTOM CATALOG
+  // LOAD STANDARDIZED SYMPTOMS
   // ====================================================
 
 
@@ -184,6 +251,14 @@ export default function SymptomAssessmentPage() {
   });
 
 
+  // Support either:
+  //
+  // [...]
+  //
+  // or:
+  //
+  // { items: [...] }
+
   const symptoms =
     useMemo(
       () => {
@@ -195,6 +270,7 @@ export default function SymptomAssessmentPage() {
           return symptomsData;
         }
 
+
         if (
           Array.isArray(
             symptomsData?.items
@@ -205,6 +281,7 @@ export default function SymptomAssessmentPage() {
           );
         }
 
+
         return [];
       },
       [
@@ -214,7 +291,7 @@ export default function SymptomAssessmentPage() {
 
 
   // ====================================================
-  // AI ASSESSMENT
+  // AI SYMPTOM ASSESSMENT
   // ====================================================
 
 
@@ -234,8 +311,22 @@ export default function SymptomAssessmentPage() {
 
 
   // ====================================================
-  // REAL DOCTOR SEARCH
+  // PHASE 34
+  // AI SPECIALTY -> REAL DATABASE DOCTORS
+  //
+  // Important:
+  // Disable normal Doctor recommendations when the AI
+  // marks the situation as EMERGENCY.
   // ====================================================
+
+
+  const shouldSearchDoctors =
+    Boolean(
+      assessment
+        ?.recommended_specialty
+    )
+    && assessment
+      ?.urgency !== "EMERGENCY";
 
 
   const {
@@ -255,6 +346,7 @@ export default function SymptomAssessmentPage() {
       "ai-recommended-doctors",
       assessment
         ?.recommended_specialty,
+      30,
     ],
 
     queryFn: () =>
@@ -271,10 +363,7 @@ export default function SymptomAssessmentPage() {
       }),
 
     enabled:
-      Boolean(
-        assessment
-          ?.recommended_specialty
-      ),
+      shouldSearchDoctors,
   });
 
 
@@ -300,9 +389,11 @@ export default function SymptomAssessmentPage() {
         ) {
           return current.filter(
             (id) =>
-              id !== symptomId
+              id
+              !== symptomId
           );
         }
+
 
         return [
           ...current,
@@ -324,8 +415,12 @@ export default function SymptomAssessmentPage() {
     event.preventDefault();
 
 
+    setFormError("");
+
+
     if (
-      selectedIds.length === 0
+      selectedIds.length
+      === 0
     ) {
       setFormError(
         "Select at least one symptom."
@@ -356,6 +451,33 @@ export default function SymptomAssessmentPage() {
   }
 
 
+  // ====================================================
+  // RESET
+  // ====================================================
+
+
+  function handleReset() {
+    setSelectedIds(
+      []
+    );
+
+    setDuration(
+      ""
+    );
+
+    setFormError(
+      ""
+    );
+
+    assessmentMutation.reset();
+  }
+
+
+  // ====================================================
+  // UI
+  // ====================================================
+
+
   return (
     <div
       className="
@@ -365,7 +487,7 @@ export default function SymptomAssessmentPage() {
       "
     >
       {/* =============================================== */}
-      {/* PAGE HEADER                                     */}
+      {/* HEADER                                          */}
       {/* =============================================== */}
 
       <section
@@ -387,9 +509,14 @@ export default function SymptomAssessmentPage() {
         >
           <div
             className="
+              flex
+              h-12
+              w-12
+              shrink-0
+              items-center
+              justify-center
               rounded-xl
               bg-blue-50
-              p-3
               text-blue-600
             "
           >
@@ -423,19 +550,47 @@ export default function SymptomAssessmentPage() {
                 text-slate-500
               "
             >
-              Select your symptoms and
-              MediVision will provide an
-              AI-assisted assessment with
-              possible conditions and a
-              recommended medical specialty.
+              Select the symptoms you are
+              experiencing. MediVision provides
+              possible conditions, understandable
+              reasoning and a suggested medical
+              specialty.
             </p>
+
+
+            <div
+              className="
+                mt-3
+                flex
+                items-start
+                gap-2
+                text-xs
+                leading-5
+                text-slate-500
+              "
+            >
+              <Info
+                className="
+                  mt-0.5
+                  h-4
+                  w-4
+                  shrink-0
+                "
+              />
+
+              <span>
+                This feature provides AI-assisted
+                clinical decision support. It does
+                not provide a confirmed diagnosis.
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
 
       {/* =============================================== */}
-      {/* FORM                                            */}
+      {/* SYMPTOM FORM                                    */}
       {/* =============================================== */}
 
       <form
@@ -468,6 +623,7 @@ export default function SymptomAssessmentPage() {
               "
             />
 
+
             <h2
               className="
                 text-lg
@@ -475,7 +631,7 @@ export default function SymptomAssessmentPage() {
                 text-slate-900
               "
             >
-              Select symptoms
+              Select your symptoms
             </h2>
           </div>
 
@@ -487,11 +643,15 @@ export default function SymptomAssessmentPage() {
               text-slate-500
             "
           >
-            Choose all symptoms that
-            currently apply.
+            Select all symptoms that
+            currently apply to you.
           </p>
         </div>
 
+
+        {/* --------------------------------------------- */}
+        {/* LOADING                                       */}
+        {/* --------------------------------------------- */}
 
         {symptomsLoading && (
           <div
@@ -499,6 +659,11 @@ export default function SymptomAssessmentPage() {
               flex
               items-center
               gap-2
+              rounded-lg
+              border
+              border-slate-200
+              bg-slate-50
+              p-4
               text-sm
               text-slate-500
             "
@@ -511,10 +676,14 @@ export default function SymptomAssessmentPage() {
               "
             />
 
-            Loading symptoms...
+            Loading symptom catalog...
           </div>
         )}
 
+
+        {/* --------------------------------------------- */}
+        {/* SYMPTOM ERROR                                 */}
+        {/* --------------------------------------------- */}
 
         {symptomsIsError && (
           <div
@@ -535,6 +704,10 @@ export default function SymptomAssessmentPage() {
         )}
 
 
+        {/* --------------------------------------------- */}
+        {/* SYMPTOM BUTTONS                               */}
+        {/* --------------------------------------------- */}
+
         {!symptomsLoading
           && !symptomsIsError
           && (
@@ -551,10 +724,9 @@ export default function SymptomAssessmentPage() {
                   symptom
                 ) => {
                   const selected =
-                    selectedIds
-                      .includes(
-                        symptom.id
-                      );
+                    selectedIds.includes(
+                      symptom.id
+                    );
 
 
                   return (
@@ -570,15 +742,17 @@ export default function SymptomAssessmentPage() {
                       }
                       className={`
                         flex
-                        min-h-[48px]
+                        min-h-[50px]
                         items-center
                         justify-between
+                        gap-3
                         rounded-lg
                         border
                         px-4
                         py-3
                         text-left
                         text-sm
+                        font-medium
                         transition
 
                         ${
@@ -592,13 +766,16 @@ export default function SymptomAssessmentPage() {
                               "border-slate-200 "
                               + "bg-white "
                               + "text-slate-700 "
-                              + "hover:border-blue-300"
+                              + "hover:border-blue-300 "
+                              + "hover:bg-slate-50"
                             )
                         }
                       `}
                     >
                       <span>
-                        {symptom.name}
+                        {
+                          symptom.name
+                        }
                       </span>
 
 
@@ -608,6 +785,7 @@ export default function SymptomAssessmentPage() {
                             h-5
                             w-5
                             shrink-0
+                            text-blue-600
                           "
                         />
                       )}
@@ -618,6 +796,37 @@ export default function SymptomAssessmentPage() {
             </div>
           )}
 
+
+        {/* --------------------------------------------- */}
+        {/* SELECTED COUNT                                */}
+        {/* --------------------------------------------- */}
+
+        {selectedIds.length
+          > 0
+          && (
+            <p
+              className="
+                text-sm
+                text-slate-500
+              "
+            >
+              {
+                selectedIds.length
+              }{" "}
+              {
+                selectedIds.length
+                === 1
+                  ? "symptom"
+                  : "symptoms"
+              }{" "}
+              selected.
+            </p>
+          )}
+
+
+        {/* --------------------------------------------- */}
+        {/* DURATION                                      */}
+        {/* --------------------------------------------- */}
 
         <div
           className="
@@ -648,10 +857,15 @@ export default function SymptomAssessmentPage() {
             onChange={
               (
                 event
-              ) =>
+              ) => {
                 setDuration(
                   event.target.value
-                )
+                );
+
+                setFormError(
+                  ""
+                );
+              }
             }
             placeholder="Example: 2 days"
             maxLength={100}
@@ -666,14 +880,33 @@ export default function SymptomAssessmentPage() {
               text-sm
               text-slate-900
               outline-none
+              transition
+
+              placeholder:text-slate-400
 
               focus:border-blue-600
               focus:ring-2
               focus:ring-blue-100
             "
           />
+
+
+          <p
+            className="
+              mt-2
+              text-xs
+              text-slate-500
+            "
+          >
+            Examples: 6 hours, 2 days,
+            1 week.
+          </p>
         </div>
 
+
+        {/* --------------------------------------------- */}
+        {/* FORM ERROR                                    */}
+        {/* --------------------------------------------- */}
 
         {formError && (
           <div
@@ -692,7 +925,12 @@ export default function SymptomAssessmentPage() {
         )}
 
 
-        {assessmentMutation.isError
+        {/* --------------------------------------------- */}
+        {/* API ERROR                                     */}
+        {/* --------------------------------------------- */}
+
+        {assessmentMutation
+          .isError
           && (
             <div
               className="
@@ -706,78 +944,129 @@ export default function SymptomAssessmentPage() {
               "
             >
               {getErrorMessage(
-                assessmentMutation.error
+                assessmentMutation
+                  .error
               )}
             </div>
           )}
 
 
-        <button
-          type="submit"
-          disabled={
-            assessmentMutation
-              .isPending
-          }
+        {/* --------------------------------------------- */}
+        {/* ACTIONS                                       */}
+        {/* --------------------------------------------- */}
+
+        <div
           className="
-            inline-flex
-            min-h-[44px]
-            items-center
-            justify-center
-            gap-2
-            rounded-lg
-            bg-blue-600
-            px-5
-            py-2.5
-            text-sm
-            font-medium
-            text-white
-
-            hover:bg-blue-700
-
-            disabled:cursor-not-allowed
-            disabled:opacity-60
+            flex
+            flex-wrap
+            gap-3
           "
         >
-          {assessmentMutation
-            .isPending
-            ? (
-              <>
-                <LoaderCircle
-                  className="
-                    h-4
-                    w-4
-                    animate-spin
-                  "
-                />
+          <button
+            type="submit"
+            disabled={
+              assessmentMutation
+                .isPending
+              || symptomsLoading
+            }
+            className="
+              inline-flex
+              min-h-[44px]
+              items-center
+              justify-center
+              gap-2
+              rounded-lg
+              bg-blue-600
+              px-5
+              py-2.5
+              text-sm
+              font-semibold
+              text-white
+              transition
 
-                Assessing...
-              </>
-            )
-            : (
-              <>
-                <Brain
-                  className="
-                    h-4
-                    w-4
-                  "
-                />
+              hover:bg-blue-700
 
-                Assess Symptoms
-              </>
+              disabled:cursor-not-allowed
+              disabled:opacity-60
+            "
+          >
+            {assessmentMutation
+              .isPending
+              ? (
+                <>
+                  <LoaderCircle
+                    className="
+                      h-4
+                      w-4
+                      animate-spin
+                    "
+                  />
+
+                  Assessing...
+                </>
+              )
+              : (
+                <>
+                  <Sparkles
+                    className="
+                      h-4
+                      w-4
+                    "
+                  />
+
+                  Assess Symptoms
+                </>
+              )}
+          </button>
+
+
+          {(assessment
+            || selectedIds.length
+              > 0)
+            && (
+              <button
+                type="button"
+                onClick={
+                  handleReset
+                }
+                disabled={
+                  assessmentMutation
+                    .isPending
+                }
+                className="
+                  min-h-[44px]
+                  rounded-lg
+                  border
+                  border-slate-300
+                  bg-white
+                  px-5
+                  py-2.5
+                  text-sm
+                  font-medium
+                  text-slate-700
+                  transition
+
+                  hover:bg-slate-50
+
+                  disabled:opacity-60
+                "
+              >
+                Reset
+              </button>
             )}
-        </button>
+        </div>
       </form>
 
 
       {/* =============================================== */}
-      {/* ASSESSMENT RESULT                               */}
+      {/* PHASE 33 + 35 RESULT                            */}
       {/* =============================================== */}
 
       {assessment && (
         <>
           <section
             className="
-              space-y-5
+              space-y-6
               rounded-xl
               border
               border-slate-200
@@ -786,25 +1075,46 @@ export default function SymptomAssessmentPage() {
               shadow-sm
             "
           >
+            {/* ----------------------------------------- */}
+            {/* RESULT HEADER                             */}
+            {/* ----------------------------------------- */}
+
             <div
               className="
                 flex
                 flex-wrap
-                items-center
+                items-start
                 justify-between
-                gap-3
+                gap-4
               "
             >
               <div>
-                <h2
+                <div
                   className="
-                    text-xl
-                    font-semibold
-                    text-slate-900
+                    flex
+                    items-center
+                    gap-2
                   "
                 >
-                  Assessment Result
-                </h2>
+                  <Brain
+                    className="
+                      h-5
+                      w-5
+                      text-blue-600
+                    "
+                  />
+
+
+                  <h2
+                    className="
+                      text-xl
+                      font-semibold
+                      text-slate-900
+                    "
+                  >
+                    Assessment Result
+                  </h2>
+                </div>
 
 
                 <p
@@ -814,8 +1124,9 @@ export default function SymptomAssessmentPage() {
                     text-slate-500
                   "
                 >
-                  Possible conditions,
-                  not a confirmed diagnosis.
+                  These are possible
+                  conditions, not confirmed
+                  diagnoses.
                 </p>
               </div>
 
@@ -830,21 +1141,28 @@ export default function SymptomAssessmentPage() {
                   font-semibold
 
                   ${urgencyClasses(
-                    assessment.urgency
+                    assessment
+                      .urgency
                   )}
                 `}
               >
-                {assessment.urgency}
+                {
+                  assessment
+                    .urgency
+                }
               </span>
             </div>
 
 
-            {/* Possible conditions */}
+            {/* ----------------------------------------- */}
+            {/* POSSIBLE CONDITIONS                       */}
+            {/* ----------------------------------------- */}
 
             <div>
               <h3
                 className="
-                  font-medium
+                  text-base
+                  font-semibold
                   text-slate-900
                 "
               >
@@ -852,71 +1170,196 @@ export default function SymptomAssessmentPage() {
               </h3>
 
 
+              <p
+                className="
+                  mt-1
+                  text-sm
+                  text-slate-500
+                "
+              >
+                Why these possibilities
+                were suggested based on
+                your reported symptoms.
+              </p>
+
+
               <div
                 className="
-                  mt-3
+                  mt-4
                   grid
-                  gap-3
+                  gap-4
                 "
               >
                 {assessment
                   .possible_conditions
-                  .map(
+                  ?.map(
                     (
-                      condition
+                      condition,
+                      index
                     ) => (
-                      <div
+                      <article
                         key={
-                          condition.name
+                          `${condition.name}-${index}`
                         }
                         className="
-                          rounded-lg
+                          rounded-xl
                           border
                           border-slate-200
                           bg-slate-50
-                          p-4
+                          p-5
                         "
                       >
+                        {/* Condition */}
+
                         <div
                           className="
-                            font-medium
+                            text-xs
+                            font-semibold
+                            uppercase
+                            tracking-wide
+                            text-slate-500
+                          "
+                        >
+                          Possible condition
+                        </div>
+
+
+                        <h4
+                          className="
+                            mt-1
+                            text-lg
+                            font-semibold
                             text-slate-900
                           "
                         >
                           {
                             condition.name
                           }
-                        </div>
+                        </h4>
 
 
-                        <p
+                        {/* Phase 35 factors */}
+
+                        {condition
+                          .relevant_reported_factors
+                          ?.length > 0
+                          && (
+                            <div
+                              className="
+                                mt-4
+                              "
+                            >
+                              <div
+                                className="
+                                  text-sm
+                                  font-medium
+                                  text-slate-700
+                                "
+                              >
+                                Relevant reported
+                                factors
+                              </div>
+
+
+                              <div
+                                className="
+                                  mt-2
+                                  flex
+                                  flex-wrap
+                                  gap-2
+                                "
+                              >
+                                {condition
+                                  .relevant_reported_factors
+                                  .map(
+                                    (
+                                      factor
+                                    ) => (
+                                      <span
+                                        key={
+                                          factor
+                                        }
+                                        className="
+                                          inline-flex
+                                          items-center
+                                          gap-1.5
+                                          rounded-full
+                                          border
+                                          border-blue-200
+                                          bg-blue-50
+                                          px-3
+                                          py-1
+                                          text-sm
+                                          text-blue-700
+                                        "
+                                      >
+                                        <CheckCircle2
+                                          className="
+                                            h-3.5
+                                            w-3.5
+                                          "
+                                        />
+
+                                        {
+                                          factor
+                                        }
+                                      </span>
+                                    )
+                                  )}
+                              </div>
+                            </div>
+                          )}
+
+
+                        {/* Explanation */}
+
+                        <div
                           className="
-                            mt-1
-                            text-sm
-                            leading-6
-                            text-slate-600
+                            mt-4
                           "
                         >
-                          {
-                            condition.reason
-                          }
-                        </p>
-                      </div>
+                          <div
+                            className="
+                              text-sm
+                              font-medium
+                              text-slate-700
+                            "
+                          >
+                            Why was this suggested?
+                          </div>
+
+
+                          <p
+                            className="
+                              mt-1
+                              text-sm
+                              leading-6
+                              text-slate-600
+                            "
+                          >
+                            {
+                              condition.reason
+                            }
+                          </p>
+                        </div>
+                      </article>
                     )
                   )}
               </div>
             </div>
 
 
-            {/* Specialty */}
+            {/* ----------------------------------------- */}
+            {/* SPECIALTY                                 */}
+            {/* ----------------------------------------- */}
 
             <div
               className="
-                rounded-lg
+                rounded-xl
                 border
                 border-blue-200
                 bg-blue-50
-                p-4
+                p-5
               "
             >
               <div
@@ -926,14 +1369,21 @@ export default function SymptomAssessmentPage() {
                   gap-3
                 "
               >
-                <Stethoscope
+                <div
                   className="
-                    mt-0.5
-                    h-5
-                    w-5
+                    rounded-lg
+                    bg-white
+                    p-2
                     text-blue-600
                   "
-                />
+                >
+                  <Stethoscope
+                    className="
+                      h-5
+                      w-5
+                    "
+                  />
+                </div>
 
 
                 <div>
@@ -944,14 +1394,14 @@ export default function SymptomAssessmentPage() {
                       text-blue-900
                     "
                   >
-                    Recommended specialty
+                    Suggested specialty
                   </div>
 
 
                   <div
                     className="
                       mt-1
-                      text-lg
+                      text-xl
                       font-semibold
                       text-blue-700
                     "
@@ -961,36 +1411,76 @@ export default function SymptomAssessmentPage() {
                         .recommended_specialty
                     )}
                   </div>
+
+
+                  {assessment
+                    .specialty_reason
+                    && (
+                      <div
+                        className="
+                          mt-3
+                        "
+                      >
+                        <div
+                          className="
+                            text-sm
+                            font-medium
+                            text-blue-900
+                          "
+                        >
+                          Why this specialty?
+                        </div>
+
+
+                        <p
+                          className="
+                            mt-1
+                            text-sm
+                            leading-6
+                            text-blue-800
+                          "
+                        >
+                          {
+                            assessment
+                              .specialty_reason
+                          }
+                        </p>
+                      </div>
+                    )}
                 </div>
               </div>
             </div>
 
 
-            {/* Emergency */}
+            {/* ----------------------------------------- */}
+            {/* EMERGENCY WARNING                         */}
+            {/* ----------------------------------------- */}
 
-            {assessment.urgency
+            {assessment
+              .urgency
               === "EMERGENCY"
               && (
                 <div
                   className="
-                    rounded-lg
+                    rounded-xl
                     border
                     border-rose-200
                     bg-rose-50
-                    p-4
+                    p-5
                   "
                 >
                   <div
                     className="
                       flex
+                      items-start
                       gap-3
                     "
                   >
                     <ShieldAlert
                       className="
                         mt-0.5
-                        h-5
-                        w-5
+                        h-6
+                        w-6
                         shrink-0
                         text-rose-600
                       "
@@ -998,14 +1488,15 @@ export default function SymptomAssessmentPage() {
 
 
                     <div>
-                      <div
+                      <h3
                         className="
                           font-semibold
-                          text-rose-800
+                          text-rose-900
                         "
                       >
-                        Emergency assessment
-                      </div>
+                        Seek emergency
+                        medical care
+                      </h3>
 
 
                       <p
@@ -1013,14 +1504,16 @@ export default function SymptomAssessmentPage() {
                           mt-1
                           text-sm
                           leading-6
-                          text-rose-700
+                          text-rose-800
                         "
                       >
-                        Seek emergency medical
-                        care promptly. Do not rely
+                        This assessment indicates
+                        that prompt emergency
+                        evaluation may be
+                        appropriate. Do not rely
                         on waiting for a routine
-                        appointment when urgent
-                        emergency care is needed.
+                        appointment if immediate
+                        medical care is needed.
                       </p>
                     </div>
                   </div>
@@ -1028,7 +1521,9 @@ export default function SymptomAssessmentPage() {
               )}
 
 
-            {/* Red flags */}
+            {/* ----------------------------------------- */}
+            {/* RED FLAGS                                 */}
+            {/* ----------------------------------------- */}
 
             {assessment
               .red_flags
@@ -1036,16 +1531,17 @@ export default function SymptomAssessmentPage() {
               && (
                 <div
                   className="
-                    rounded-lg
+                    rounded-xl
                     border
                     border-amber-200
                     bg-amber-50
-                    p-4
+                    p-5
                   "
                 >
                   <div
                     className="
                       flex
+                      items-start
                       gap-3
                     "
                   >
@@ -1063,20 +1559,21 @@ export default function SymptomAssessmentPage() {
                     <div>
                       <h3
                         className="
-                          font-medium
+                          font-semibold
                           text-amber-900
                         "
                       >
                         Seek urgent medical
-                        care if any of these occur
+                        care if any of these
+                        occur
                       </h3>
 
 
                       <ul
                         className="
-                          mt-2
+                          mt-3
                           list-disc
-                          space-y-1
+                          space-y-2
                           pl-5
                           text-sm
                           leading-6
@@ -1087,11 +1584,12 @@ export default function SymptomAssessmentPage() {
                           .red_flags
                           .map(
                             (
-                              item
+                              item,
+                              index
                             ) => (
                               <li
                                 key={
-                                  item
+                                  `${item}-${index}`
                                 }
                               >
                                 {item}
@@ -1105,495 +1603,648 @@ export default function SymptomAssessmentPage() {
               )}
 
 
-            {/* Safety */}
+            {/* ----------------------------------------- */}
+            {/* SAFETY MESSAGE                            */}
+            {/* ----------------------------------------- */}
 
-            <div
-              className="
-                rounded-lg
-                border
-                border-slate-200
-                bg-slate-50
-                p-4
-                text-sm
-                leading-6
-                text-slate-600
-              "
-            >
-              {
-                assessment
-                  .safety_message
-              }
-            </div>
-          </section>
-
-
-          {/* ============================================= */}
-          {/* REAL DOCTORS                                  */}
-          {/* ============================================= */}
-
-          <section
-            className="
-              rounded-xl
-              border
-              border-slate-200
-              bg-white
-              p-6
-              shadow-sm
-            "
-          >
             <div
               className="
                 flex
                 items-start
                 gap-3
+                rounded-xl
+                border
+                border-slate-200
+                bg-slate-50
+                p-4
               "
             >
-              <Stethoscope
+              <Info
                 className="
                   mt-0.5
-                  h-6
-                  w-6
-                  text-blue-600
+                  h-5
+                  w-5
+                  shrink-0
+                  text-slate-500
                 "
               />
 
 
-              <div>
-                <h2
-                  className="
-                    text-xl
-                    font-semibold
-                    text-slate-900
-                  "
-                >
-                  Available MediVision Doctors
-                </h2>
-
-
-                <p
-                  className="
-                    mt-1
-                    text-sm
-                    text-slate-500
-                  "
-                >
-                  These Doctors come from the
-                  MediVision database. They are
-                  not generated by the AI.
-                </p>
-              </div>
+              <p
+                className="
+                  text-sm
+                  leading-6
+                  text-slate-600
+                "
+              >
+                {
+                  assessment
+                    .safety_message
+                }
+              </p>
             </div>
+          </section>
 
 
-            {doctorsLoading && (
-              <div
+          {/* ============================================= */}
+          {/* PHASE 34 — REAL DOCTOR DISCOVERY              */}
+          {/* ============================================= */}
+
+          {assessment
+            .urgency
+            !== "EMERGENCY"
+            && (
+              <section
                 className="
-                  mt-6
-                  flex
-                  items-center
-                  gap-2
-                  text-sm
-                  text-slate-500
-                "
-              >
-                <LoaderCircle
-                  className="
-                    h-4
-                    w-4
-                    animate-spin
-                  "
-                />
-
-                Finding verified Doctors...
-              </div>
-            )}
-
-
-            {doctorsIsError && (
-              <div
-                className="
-                  mt-6
-                  rounded-lg
+                  rounded-xl
                   border
-                  border-rose-200
-                  bg-rose-50
-                  p-4
-                  text-sm
-                  text-rose-700
+                  border-slate-200
+                  bg-white
+                  p-6
+                  shadow-sm
                 "
               >
-                {getErrorMessage(
-                  doctorsError
-                )}
-              </div>
-            )}
-
-
-            {!doctorsLoading
-              && !doctorsIsError
-              && doctorData
-              && (
-                <>
+                <div
+                  className="
+                    flex
+                    flex-wrap
+                    items-start
+                    justify-between
+                    gap-4
+                  "
+                >
                   <div
                     className="
-                      mt-4
+                      flex
+                      items-start
+                      gap-3
+                    "
+                  >
+                    <div
+                      className="
+                        rounded-xl
+                        bg-blue-50
+                        p-3
+                        text-blue-600
+                      "
+                    >
+                      <Stethoscope
+                        className="
+                          h-5
+                          w-5
+                        "
+                      />
+                    </div>
+
+
+                    <div>
+                      <h2
+                        className="
+                          text-xl
+                          font-semibold
+                          text-slate-900
+                        "
+                      >
+                        Recommended MediVision
+                        Doctors
+                      </h2>
+
+
+                      <p
+                        className="
+                          mt-1
+                          max-w-2xl
+                          text-sm
+                          leading-6
+                          text-slate-500
+                        "
+                      >
+                        The AI recommends only
+                        the medical specialty.
+                        Doctor profiles and
+                        appointment availability
+                        below come directly from
+                        MediVision&apos;s database.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+
+                {/* ------------------------------------- */}
+                {/* DOCTOR LOADING                        */}
+                {/* ------------------------------------- */}
+
+                {doctorsLoading && (
+                  <div
+                    className="
+                      mt-6
+                      flex
+                      items-center
+                      gap-2
                       rounded-lg
                       border
                       border-slate-200
                       bg-slate-50
-                      px-4
-                      py-3
+                      p-4
                       text-sm
-                      text-slate-600
+                      text-slate-500
                     "
                   >
-                    Specialty:
-                    {" "}
-
-                    <span
+                    <LoaderCircle
                       className="
-                        font-medium
-                        text-slate-900
+                        h-4
+                        w-4
+                        animate-spin
                       "
-                    >
-                      {
-                        doctorData
-                          .specialty_name
-                      }
-                    </span>
+                    />
 
-                    {" · "}
-
-                    {
-                      doctorData.total
-                    }
-
-                    {
-                      doctorData.total === 1
-                        ? " Doctor"
-                        : " Doctors"
-                    }
+                    Finding verified{" "}
+                    {formatSpecialtyCode(
+                      assessment
+                        .recommended_specialty
+                    )}{" "}
+                    Doctors...
                   </div>
+                )}
 
 
-                  {doctorData
-                    .doctors
-                    .length === 0
-                    ? (
+                {/* ------------------------------------- */}
+                {/* DOCTOR ERROR                          */}
+                {/* ------------------------------------- */}
+
+                {doctorsIsError && (
+                  <div
+                    className="
+                      mt-6
+                      rounded-lg
+                      border
+                      border-rose-200
+                      bg-rose-50
+                      p-4
+                      text-sm
+                      text-rose-700
+                    "
+                  >
+                    {getErrorMessage(
+                      doctorsError
+                    )}
+                  </div>
+                )}
+
+
+                {/* ------------------------------------- */}
+                {/* DOCTOR RESULTS                        */}
+                {/* ------------------------------------- */}
+
+                {!doctorsLoading
+                  && !doctorsIsError
+                  && doctorData
+                  && (
+                    <>
                       <div
                         className="
-                          mt-6
+                          mt-5
                           rounded-lg
                           border
                           border-slate-200
-                          p-6
-                          text-center
+                          bg-slate-50
+                          px-4
+                          py-3
+                          text-sm
+                          text-slate-600
                         "
                       >
-                        <UserRound
+                        Showing real Doctors
+                        for{" "}
+
+                        <span
                           className="
-                            mx-auto
-                            h-8
-                            w-8
-                            text-slate-400
+                            font-semibold
+                            text-slate-900
                           "
-                        />
+                        >
+                          {
+                            doctorData
+                              .specialty_name
+                          }
+                        </span>
 
+                        {" · "}
 
-                        <p
+                        <span
                           className="
-                            mt-3
                             font-medium
                             text-slate-900
                           "
                         >
-                          No matching verified
-                          Doctors are currently
-                          available.
-                        </p>
-
-
-                        <p
-                          className="
-                            mt-1
-                            text-sm
-                            text-slate-500
-                          "
-                        >
-                          You can still use the
-                          normal Doctor search.
-                        </p>
-
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            navigate(
-                              "/doctors"
-                            )
+                          {
+                            doctorData.total
                           }
-                          className="
-                            mt-4
-                            rounded-lg
-                            border
-                            border-slate-300
-                            px-4
-                            py-2
-                            text-sm
-                            font-medium
-                            text-slate-700
+                        </span>
 
-                            hover:bg-slate-50
-                          "
-                        >
-                          Open Doctor Search
-                        </button>
+                        {" "}
+
+                        {
+                          doctorData.total
+                          === 1
+                            ? "Doctor"
+                            : "Doctors"
+                        }
                       </div>
-                    )
-                    : (
-                      <div
-                        className="
-                          mt-6
-                          grid
-                          gap-4
-                          md:grid-cols-2
-                        "
-                      >
-                        {doctorData
-                          .doctors
-                          .map(
-                            (
-                              doctor
-                            ) => (
-                              <article
-                                key={
-                                  doctor.id
-                                }
+
+
+                      {/* No Doctors */}
+
+                      {doctorData
+                        .doctors
+                        ?.length === 0
+                        && (
+                          <div
+                            className="
+                              mt-6
+                              rounded-xl
+                              border
+                              border-slate-200
+                              p-8
+                              text-center
+                            "
+                          >
+                            <UserRound
+                              className="
+                                mx-auto
+                                h-10
+                                w-10
+                                text-slate-400
+                              "
+                            />
+
+
+                            <h3
+                              className="
+                                mt-3
+                                font-semibold
+                                text-slate-900
+                              "
+                            >
+                              No matching verified
+                              Doctors are currently
+                              available
+                            </h3>
+
+
+                            <p
+                              className="
+                                mx-auto
+                                mt-1
+                                max-w-lg
+                                text-sm
+                                leading-6
+                                text-slate-500
+                              "
+                            >
+                              MediVision will not
+                              invent a Doctor when
+                              no matching database
+                              record exists. You can
+                              still open the normal
+                              Doctor search.
+                            </p>
+
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                navigate(
+                                  "/doctors"
+                                )
+                              }
+                              className="
+                                mt-5
+                                inline-flex
+                                min-h-[42px]
+                                items-center
+                                justify-center
+                                gap-2
+                                rounded-lg
+                                border
+                                border-slate-300
+                                px-4
+                                py-2
+                                text-sm
+                                font-medium
+                                text-slate-700
+
+                                hover:bg-slate-50
+                              "
+                            >
+                              Open Doctor Search
+
+                              <ChevronRight
                                 className="
-                                  rounded-xl
-                                  border
-                                  border-slate-200
-                                  p-5
+                                  h-4
+                                  w-4
                                 "
-                              >
-                                <div
-                                  className="
-                                    flex
-                                    gap-3
-                                  "
-                                >
-                                  <div
+                              />
+                            </button>
+                          </div>
+                        )}
+
+
+                      {/* Doctor Cards */}
+
+                      {doctorData
+                        .doctors
+                        ?.length > 0
+                        && (
+                          <div
+                            className="
+                              mt-6
+                              grid
+                              gap-4
+                              md:grid-cols-2
+                              xl:grid-cols-3
+                            "
+                          >
+                            {doctorData
+                              .doctors
+                              .map(
+                                (
+                                  doctor
+                                ) => (
+                                  <article
+                                    key={
+                                      doctor.id
+                                    }
                                     className="
                                       flex
-                                      h-11
-                                      w-11
-                                      shrink-0
-                                      items-center
-                                      justify-center
-                                      rounded-full
-                                      bg-blue-50
-                                      text-blue-600
+                                      flex-col
+                                      rounded-xl
+                                      border
+                                      border-slate-200
+                                      bg-white
+                                      p-5
+                                      shadow-sm
                                     "
                                   >
-                                    <UserRound
-                                      className="
-                                        h-5
-                                        w-5
-                                      "
-                                    />
-                                  </div>
+                                    {/* Doctor */}
 
-
-                                  <div>
-                                    <h3
+                                    <div
                                       className="
-                                        font-semibold
-                                        text-slate-900
+                                        flex
+                                        items-start
+                                        gap-3
                                       "
                                     >
-                                      Dr.{" "}
-                                      {
-                                        doctor
-                                          .first_name
-                                      }{" "}
-                                      {
-                                        doctor
-                                          .last_name
-                                      }
-                                    </h3>
-
-
-                                    <p
-                                      className="
-                                        mt-0.5
-                                        text-sm
-                                        text-slate-500
-                                      "
-                                    >
-                                      {
-                                        doctor
-                                          .qualification
-                                        || (
-                                          "Verified Doctor"
-                                        )
-                                      }
-                                    </p>
-
-
-                                    <p
-                                      className="
-                                        mt-1
-                                        text-xs
-                                        text-slate-400
-                                      "
-                                    >
-                                      {
-                                        doctor
-                                          .doctor_code
-                                      }
-                                    </p>
-                                  </div>
-                                </div>
-
-
-                                <div
-                                  className="
-                                    mt-5
-                                  "
-                                >
-                                  <div
-                                    className="
-                                      flex
-                                      items-center
-                                      gap-2
-                                      text-sm
-                                      font-medium
-                                      text-slate-700
-                                    "
-                                  >
-                                    <CalendarDays
-                                      className="
-                                        h-4
-                                        w-4
-                                      "
-                                    />
-
-                                    Next available slots
-                                  </div>
-
-
-                                  {doctor
-                                    .next_available_slots
-                                    .length > 0
-                                    ? (
                                       <div
                                         className="
-                                          mt-2
-                                          space-y-2
+                                          flex
+                                          h-11
+                                          w-11
+                                          shrink-0
+                                          items-center
+                                          justify-center
+                                          rounded-full
+                                          bg-blue-50
+                                          text-blue-600
                                         "
                                       >
-                                        {doctor
-                                          .next_available_slots
-                                          .map(
-                                            (
-                                              slot
-                                            ) => (
-                                              <div
-                                                key={
-                                                  slot.id
-                                                }
-                                                className="
-                                                  flex
-                                                  items-center
-                                                  gap-2
-                                                  rounded-lg
-                                                  bg-slate-50
-                                                  px-3
-                                                  py-2
-                                                  text-sm
-                                                  text-slate-600
-                                                "
-                                              >
-                                                <Clock3
-                                                  className="
-                                                    h-4
-                                                    w-4
-                                                    text-slate-400
-                                                  "
-                                                />
-
-                                                {formatSlot(
-                                                  slot
-                                                    .start_at
-                                                )}
-                                              </div>
-                                            )
-                                          )}
+                                        <UserRound
+                                          className="
+                                            h-5
+                                            w-5
+                                          "
+                                        />
                                       </div>
-                                    )
-                                    : (
-                                      <p
+
+
+                                      <div
                                         className="
-                                          mt-2
-                                          text-sm
-                                          text-slate-500
+                                          min-w-0
                                         "
                                       >
-                                        No available slots
-                                        in the next{" "}
-                                        {
-                                          doctorData
-                                            .search_window_days
-                                        }{" "}
-                                        days.
-                                      </p>
-                                    )}
-                                </div>
+                                        <h3
+                                          className="
+                                            truncate
+                                            font-semibold
+                                            text-slate-900
+                                          "
+                                        >
+                                          Dr.{" "}
+                                          {
+                                            doctor
+                                              .first_name
+                                          }{" "}
+                                          {
+                                            doctor
+                                              .last_name
+                                          }
+                                        </h3>
 
 
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    navigate(
-                                      `/doctors/${doctor.id}`
-                                    )
-                                  }
-                                  className="
-                                    mt-5
-                                    inline-flex
-                                    min-h-[42px]
-                                    w-full
-                                    items-center
-                                    justify-center
-                                    gap-2
-                                    rounded-lg
-                                    bg-blue-600
-                                    px-4
-                                    py-2
-                                    text-sm
-                                    font-medium
-                                    text-white
+                                        <p
+                                          className="
+                                            mt-0.5
+                                            text-sm
+                                            text-slate-500
+                                          "
+                                        >
+                                          {
+                                            doctor
+                                              .qualification
+                                            || "Verified Doctor"
+                                          }
+                                        </p>
 
-                                    hover:bg-blue-700
-                                  "
-                                >
-                                  <Stethoscope
-                                    className="
-                                      h-4
-                                      w-4
-                                    "
-                                  />
 
-                                  View Doctor & Book
-                                </button>
-                              </article>
-                            )
-                          )}
-                      </div>
-                    )}
-                </>
-              )}
-          </section>
+                                        <p
+                                          className="
+                                            mt-1
+                                            text-xs
+                                            text-slate-400
+                                          "
+                                        >
+                                          {
+                                            doctor
+                                              .doctor_code
+                                          }
+                                        </p>
+                                      </div>
+                                    </div>
+
+
+                                    {/* Specialty */}
+
+                                    <div
+                                      className="
+                                        mt-4
+                                        rounded-lg
+                                        bg-blue-50
+                                        px-3
+                                        py-2
+                                        text-sm
+                                        font-medium
+                                        text-blue-700
+                                      "
+                                    >
+                                      {
+                                        doctorData
+                                          .specialty_name
+                                      }
+                                    </div>
+
+
+                                    {/* Slots */}
+
+                                    <div
+                                      className="
+                                        mt-5
+                                        flex-1
+                                      "
+                                    >
+                                      <div
+                                        className="
+                                          flex
+                                          items-center
+                                          gap-2
+                                          text-sm
+                                          font-medium
+                                          text-slate-700
+                                        "
+                                      >
+                                        <CalendarDays
+                                          className="
+                                            h-4
+                                            w-4
+                                          "
+                                        />
+
+                                        Next available
+                                        slots
+                                      </div>
+
+
+                                      {doctor
+                                        .next_available_slots
+                                        ?.length > 0
+                                        ? (
+                                          <div
+                                            className="
+                                              mt-3
+                                              space-y-2
+                                            "
+                                          >
+                                            {doctor
+                                              .next_available_slots
+                                              .map(
+                                                (
+                                                  slot
+                                                ) => (
+                                                  <div
+                                                    key={
+                                                      slot.id
+                                                    }
+                                                    className="
+                                                      flex
+                                                      items-center
+                                                      gap-2
+                                                      rounded-lg
+                                                      border
+                                                      border-slate-200
+                                                      bg-slate-50
+                                                      px-3
+                                                      py-2
+                                                      text-sm
+                                                      text-slate-600
+                                                    "
+                                                  >
+                                                    <Clock3
+                                                      className="
+                                                        h-4
+                                                        w-4
+                                                        shrink-0
+                                                        text-slate-400
+                                                      "
+                                                    />
+
+                                                    {formatSlot(
+                                                      slot
+                                                        .start_at
+                                                    )}
+                                                  </div>
+                                                )
+                                              )}
+                                          </div>
+                                        )
+                                        : (
+                                          <p
+                                            className="
+                                              mt-3
+                                              text-sm
+                                              leading-6
+                                              text-slate-500
+                                            "
+                                          >
+                                            No available
+                                            slots found in
+                                            the next{" "}
+                                            {
+                                              doctorData
+                                                .search_window_days
+                                            }{" "}
+                                            days.
+                                          </p>
+                                        )}
+                                    </div>
+
+
+                                    {/* View / Book */}
+
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        navigate(
+                                          `/doctors/${doctor.id}`
+                                        )
+                                      }
+                                      className="
+                                        mt-5
+                                        inline-flex
+                                        min-h-[44px]
+                                        w-full
+                                        items-center
+                                        justify-center
+                                        gap-2
+                                        rounded-lg
+                                        bg-blue-600
+                                        px-4
+                                        py-2.5
+                                        text-sm
+                                        font-semibold
+                                        text-white
+                                        transition
+
+                                        hover:bg-blue-700
+                                      "
+                                    >
+                                      View Doctor & Book
+
+                                      <ChevronRight
+                                        className="
+                                          h-4
+                                          w-4
+                                        "
+                                      />
+                                    </button>
+                                  </article>
+                                )
+                              )}
+                          </div>
+                        )}
+                    </>
+                  )}
+              </section>
+            )}
         </>
       )}
     </div>

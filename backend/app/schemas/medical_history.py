@@ -1,7 +1,10 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import (
+    BaseModel,
+    Field,
+)
 
 
 # =========================================================
@@ -81,7 +84,9 @@ class HistoryPrescription(BaseModel):
 
     items: list[
         HistoryPrescriptionItem
-    ]
+    ] = Field(
+        default_factory=list
+    )
 
 
 # =========================================================
@@ -126,15 +131,23 @@ class HistoryEncounter(BaseModel):
 class ConsultationHistoryData(BaseModel):
     appointment: HistoryAppointment
 
-    encounter: HistoryEncounter | None = None
+    encounter: (
+        HistoryEncounter
+        | None
+    ) = None
 
     doctor: HistoryDoctor
 
     diagnoses: list[
         HistoryDiagnosis
-    ] = []
+    ] = Field(
+        default_factory=list
+    )
 
-    prescription: HistoryPrescription | None = None
+    prescription: (
+        HistoryPrescription
+        | None
+    ) = None
 
 
 # =========================================================
@@ -155,20 +168,75 @@ class DocumentHistoryData(BaseModel):
 
 
 # =========================================================
-# AI ASSESSMENT
+# PHASE 36
+# AI-ASSESSMENT HISTORY
 # =========================================================
 
 
-class HistoryAssessmentPrediction(BaseModel):
+class HistoryAssessmentSymptom(
+    BaseModel
+):
+    """
+    Snapshot of a symptom that was actually
+    reported by the Patient.
+    """
+
+    id: int
+
+    code: str
+
+    name: str
+
+
+class HistoryAssessmentCondition(
+    BaseModel
+):
+    """
+    Possible condition returned by the AI.
+
+    This is not a confirmed diagnosis.
+    """
+
+    name: str
+
+    reason: str | None = None
+
+    relevant_reported_factors: list[
+        str
+    ] = Field(
+        default_factory=list
+    )
+
+
+# =========================================================
+# LEGACY COMPATIBILITY
+#
+# Kept because an existing PatientHistoryPage may already
+# read "predictions".
+#
+# No fake confidence is produced.
+# =========================================================
+
+
+class HistoryAssessmentPrediction(
+    BaseModel
+):
     condition_name: str
 
     probability: float | None = None
 
 
-class AssessmentHistoryData(BaseModel):
+class AssessmentHistoryData(
+    BaseModel
+):
     assessment_id: uuid.UUID
 
     created_at: datetime
+
+
+    # -----------------------------------------------------
+    # Existing compatibility fields
+    # -----------------------------------------------------
 
     status: str | None = None
 
@@ -176,7 +244,60 @@ class AssessmentHistoryData(BaseModel):
 
     predictions: list[
         HistoryAssessmentPrediction
-    ] = []
+    ] = Field(
+        default_factory=list
+    )
+
+
+    # -----------------------------------------------------
+    # Phase 36 detailed history
+    # -----------------------------------------------------
+
+    duration: str | None = None
+
+    reported_symptoms: list[
+        HistoryAssessmentSymptom
+    ] = Field(
+        default_factory=list
+    )
+
+    possible_conditions: list[
+        HistoryAssessmentCondition
+    ] = Field(
+        default_factory=list
+    )
+
+    recommended_specialty_code: (
+        str
+        | None
+    ) = None
+
+    recommended_specialty_name: (
+        str
+        | None
+    ) = None
+
+    specialty_reason: (
+        str
+        | None
+    ) = None
+
+    urgency: str | None = None
+
+    red_flags: list[
+        str
+    ] = Field(
+        default_factory=list
+    )
+
+    safety_message: (
+        str
+        | None
+    ) = None
+
+    provider: str | None = None
+
+    model_name: str | None = None
 
 
 # =========================================================
@@ -184,25 +305,40 @@ class AssessmentHistoryData(BaseModel):
 # =========================================================
 
 
-class MedicalHistoryEvent(BaseModel):
+class MedicalHistoryEvent(
+    BaseModel
+):
     id: str
 
     event_type: str
 
     occurred_at: datetime
 
-    consultation: ConsultationHistoryData | None = None
+    consultation: (
+        ConsultationHistoryData
+        | None
+    ) = None
 
-    document: DocumentHistoryData | None = None
+    document: (
+        DocumentHistoryData
+        | None
+    ) = None
 
-    assessment: AssessmentHistoryData | None = None
+    assessment: (
+        AssessmentHistoryData
+        | None
+    ) = None
 
 
-class MedicalHistoryResponse(BaseModel):
+class MedicalHistoryResponse(
+    BaseModel
+):
     patient_id: uuid.UUID
 
     total_events: int
 
     events: list[
         MedicalHistoryEvent
-    ]
+    ] = Field(
+        default_factory=list
+    )
