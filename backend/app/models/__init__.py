@@ -49,6 +49,12 @@ from app.models.diet import (
     DietPlanItem,
 )
 
+from app.models.activity import (
+    ActivityLog,
+    ActivityPlan,
+    ActivityPlanItem,
+)
+
 __all__ = [
     "User",
     "Address",

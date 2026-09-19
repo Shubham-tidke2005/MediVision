@@ -74,6 +74,10 @@ from app.api.routes.diet import (
     router as diet_router,
 )
 
+from app.api.routes.activity import (
+    router as activity_router,
+)
+
 # =========================================================
 # FASTAPI APPLICATION
 # =========================================================
@@ -217,4 +221,8 @@ app.include_router(
 
 app.include_router(
     diet_router
+)
+
+app.include_router(
+    activity_router
 )
