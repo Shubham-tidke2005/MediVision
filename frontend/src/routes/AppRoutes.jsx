@@ -6,7 +6,7 @@ import {
 
 
 // ======================================================
-// LAYOUTS
+// LAYOUTS.
 // ======================================================
 
 import AppShell from "@/components/layout/AppShell";
