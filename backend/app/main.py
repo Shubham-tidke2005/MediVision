@@ -78,6 +78,9 @@ from app.api.routes.activity import (
     router as activity_router,
 )
 
+from app.api.routes.health_education import (
+    router as health_education_router,
+)
 # =========================================================
 # FASTAPI APPLICATION
 # =========================================================
@@ -225,4 +228,8 @@ app.include_router(
 
 app.include_router(
     activity_router
+)
+
+app.include_router(
+    health_education_router
 )

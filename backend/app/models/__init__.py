@@ -54,7 +54,9 @@ from app.models.activity import (
     ActivityPlan,
     ActivityPlanItem,
 )
-
+from app.models.health_article import (
+    HealthArticle,
+)
 __all__ = [
     "User",
     "Address",

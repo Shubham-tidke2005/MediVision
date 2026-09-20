@@ -83,54 +83,90 @@ import PatientAccessPage from "@/features/access/pages/PatientAccessPage";
 
 
 // ======================================================
+// MEDICATIONS
+// ======================================================
+
+import PatientMedicationsPage
+  from "@/features/medications/pages/PatientMedicationsPage";
+
+
+// ======================================================
+// HEALTH TRACKING
+// ======================================================
+
+import PatientHealthPage
+  from "@/features/health/pages/PatientHealthPage";
+
+
+// ======================================================
+// AI SYMPTOM ASSESSMENT
+// ======================================================
+
+import SymptomAssessmentPage
+  from "@/features/symptomAssessment/pages/SymptomAssessmentPage";
+
+
+// ======================================================
+// WELLNESS
+// ======================================================
+
+import WellnessPage
+  from "@/features/wellness/pages/WellnessPage";
+
+
+// ======================================================
+// PHASE 43 — HEALTH EDUCATION
+// ======================================================
+
+import HealthEducationPage
+  from "@/features/healthEducation/pages/HealthEducationPage";
+
+import HealthArticlePage
+  from "@/features/healthEducation/pages/HealthArticlePage";
+
+
+// ======================================================
 // DOCTOR
 // ======================================================
 
-import DoctorProfilePage from "@/features/doctor/pages/DoctorProfilePage";
+import DoctorProfilePage
+  from "@/features/doctor/pages/DoctorProfilePage";
 
-import DoctorAvailabilityPage from "@/features/availability/pages/DoctorAvailabilityPage";
+import DoctorAvailabilityPage
+  from "@/features/availability/pages/DoctorAvailabilityPage";
 
 
 // ======================================================
 // DOCTOR DISCOVERY
 // ======================================================
 
-import DoctorDiscoveryPage from "@/features/discovery/pages/DoctorDiscoveryPage";
+import DoctorDiscoveryPage
+  from "@/features/discovery/pages/DoctorDiscoveryPage";
 
-import DoctorDetailPage from "@/features/discovery/pages/DoctorDetailPage";
+import DoctorDetailPage
+  from "@/features/discovery/pages/DoctorDetailPage";
 
 
 // ======================================================
 // APPOINTMENTS
 // ======================================================
 
-import AppointmentsPage from "@/features/appointments/pages/AppointmentsPage";
+import AppointmentsPage
+  from "@/features/appointments/pages/AppointmentsPage";
 
 
 // ======================================================
 // CLINICAL ENCOUNTERS
 // ======================================================
 
-import EncounterPage from "@/features/encounters/pages/EncounterPage";
+import EncounterPage
+  from "@/features/encounters/pages/EncounterPage";
 
 
-import PatientMedicationsPage
-  from "@/features/medications/pages/PatientMedicationsPage";
 // ======================================================
 // APP ROUTES
 // ======================================================
 
-
-
-import PatientHealthPage
-  from "@/features/health/pages/PatientHealthPage";
-
-
-import SymptomAssessmentPage
-  from "@/features/symptomAssessment/pages/SymptomAssessmentPage";
-
-
-import WellnessPage from "@/features/wellness/pages/WellnessPage";
 
 export default function AppRoutes() {
   return (
@@ -311,16 +347,21 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-  path="/patient/medications"
-  element={
-    <PatientMedicationsPage />
-  }
-/>
-
-            <Route
               path="/patient/profile"
               element={
                 <PatientProfilePage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* MEDICATIONS                                 */}
+            {/* =========================================== */}
+
+            <Route
+              path="/patient/medications"
+              element={
+                <PatientMedicationsPage />
               }
             />
 
@@ -381,26 +422,28 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-  path="/health"
-  element={
-    <PatientHealthPage />
-  }
-/>
+              path="/health"
+              element={
+                <PatientHealthPage />
+              }
+            />
+
 
             {/* =========================================== */}
             {/* AI SYMPTOM ASSESSMENT                       */}
             {/* =========================================== */}
 
             <Route
-  path="/symptom-assessment"
-  element={
-    <SymptomAssessmentPage />
-  }
-/>
+              path="/symptom-assessment"
+              element={
+                <SymptomAssessmentPage />
+              }
+            />
 
 
             {/* =========================================== */}
             {/* MEDICAL IMAGE AI                            */}
+            {/* PHASE 37–40 CURRENTLY DEFERRED              */}
             {/* =========================================== */}
 
             <Route
@@ -434,7 +477,40 @@ export default function AppRoutes() {
 
 
             {/* =========================================== */}
+            {/* DIET & ROUTINE                              */}
+            {/* PHASE 41 + PHASE 42                         */}
+            {/* =========================================== */}
+
+            <Route
+              path="/wellness"
+              element={
+                <WellnessPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* PHASE 43 — PREVENTIVE HEALTH                */}
+            {/* =========================================== */}
+
+            <Route
+              path="/health-education"
+              element={
+                <HealthEducationPage />
+              }
+            />
+
+            <Route
+              path="/health-education/:slug"
+              element={
+                <HealthArticlePage />
+              }
+            />
+
+
+            {/* =========================================== */}
             {/* NEARBY HEALTHCARE                           */}
+            {/* PHASE 45                                    */}
             {/* =========================================== */}
 
             <Route
@@ -446,18 +522,6 @@ export default function AppRoutes() {
                 />
               }
             />
-
-
-            {/* =========================================== */}
-            {/* DIET & ROUTINE                              */}
-            {/* =========================================== */}
-
-            <Route
-  path="/wellness"
-  element={
-    <WellnessPage />
-  }
-/>
 
           </Route>
 
