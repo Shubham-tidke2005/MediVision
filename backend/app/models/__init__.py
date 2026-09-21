@@ -57,6 +57,10 @@ from app.models.activity import (
 from app.models.health_article import (
     HealthArticle,
 )
+from app.models.sos import (
+    SOSEvent,
+    SOSEventAction,
+)
 __all__ = [
     "User",
     "Address",

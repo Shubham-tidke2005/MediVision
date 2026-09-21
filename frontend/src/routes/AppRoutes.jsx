@@ -4,6 +4,8 @@ import {
   Routes,
 } from "react-router-dom";
 
+import NearbyHealthcarePage
+  from "@/features/nearby/pages/NearbyHealthcarePage";
 
 // ======================================================
 // LAYOUTS.
@@ -514,14 +516,11 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-              path="/nearby"
-              element={
-                <PlaceholderPage
-                  title="Nearby Healthcare"
-                  description="Find nearby healthcare facilities."
-                />
-              }
-            />
+  path="/nearby"
+  element={
+    <NearbyHealthcarePage />
+  }
+/>
 
           </Route>
 
