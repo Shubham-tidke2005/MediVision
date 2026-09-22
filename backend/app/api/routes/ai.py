@@ -5,7 +5,9 @@ from fastapi import (
     status,
 )
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import (
+    Session,
+)
 
 from app.ai.provider import (
     AIProviderConfigurationError,
@@ -43,10 +45,6 @@ from app.schemas.symptom_assessment import (
 
 from app.services.ai_symptom_assessment import (
     create_symptom_assessment,
-)
-
-from app.api.dependencies import (
-    get_current_patient,
 )
 
 
@@ -164,46 +162,27 @@ def assess_symptoms(
         get_db
     ),
 ):
-    # `patient` intentionally ensures:
-    #
-    # - authenticated user is a Patient
-    # - Patient profile exists
-    # - Patient profile is active
-    #
-    # We do NOT send the whole Patient record
-    # to OpenAI during Phase 33.
+    """
+    Create an AI-assisted symptom assessment
+    for the currently authenticated Patient.
+
+    The Patient dependency ensures:
+    - the user is authenticated
+    - the user has the PATIENT role
+    - the Patient profile exists
+
+    The whole Patient record is not automatically
+    sent to the AI provider.
+    """
 
     try:
         return create_symptom_assessment(
-            db,
-            payload,
+            db=db,
+            payload=payload,
+            patient=patient,
         )
 
     except AIProviderError as exc:
         raise_ai_http_error(
             exc
         )
-        
-
-@router.post(
-    "/symptom-assessments",
-    response_model=(
-        SymptomAssessmentResponse
-    ),
-)
-def assess_symptoms(
-    payload: SymptomAssessmentCreate,
-
-    db: Session = Depends(
-        get_db
-    ),
-
-    patient=Depends(
-        get_current_patient
-    ),
-):
-    return create_symptom_assessment(
-        db=db,
-        payload=payload,
-        patient=patient,
-    )

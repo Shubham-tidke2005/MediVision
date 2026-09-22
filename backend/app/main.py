@@ -100,6 +100,11 @@ from app.api.routes.admin import (
 from app.api.routes.audit import (
     router as audit_router,
 )
+
+from app.api.routes.medical_image import (
+    router as medical_image_router,
+)
+
 # =========================================================
 # FASTAPI APPLICATION
 # =========================================================
@@ -271,4 +276,8 @@ app.include_router(
 
 app.include_router(
     audit_router
+)
+
+app.include_router(
+    medical_image_router
 )

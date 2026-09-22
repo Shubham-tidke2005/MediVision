@@ -1,0 +1,28 @@
+{
+  "source_image": "C:\\Shubham\\MediVision\\ml\\data\\brain_mri\\prepared\\test\\meningioma\\meningioma_00058.jpg",
+  "prediction": {
+    "class": "meningioma",
+    "display_label": "Meningioma",
+    "model_score": 0.9996528625488281
+  },
+  "gradcam_target_class": "meningioma",
+  "class_scores": {
+    "glioma": 2.334430791961495e-05,
+    "meningioma": 0.9996528625488281,
+    "no_tumor": 0.0002571365039329976,
+    "pituitary": 6.662222585873678e-05
+  },
+  "target_layer": "layer4.1.conv2",
+  "model": {
+    "architecture": "resnet18",
+    "task": "brain_mri_4_class_classification"
+  },
+  "outputs": {
+    "original": "C:\\Shubham\\MediVision\\ml\\outputs\\phase39\\examples\\meningioma\\example_01\\original.png",
+    "heatmap": "C:\\Shubham\\MediVision\\ml\\outputs\\phase39\\examples\\meningioma\\example_01\\heatmap.png",
+    "overlay": "C:\\Shubham\\MediVision\\ml\\outputs\\phase39\\examples\\meningioma\\example_01\\gradcam_overlay.png",
+    "summary": "C:\\Shubham\\MediVision\\ml\\outputs\\phase39\\examples\\meningioma\\example_01\\gradcam_summary.png"
+  },
+  "interpretation_notice": "Grad-CAM shows image regions that influenced this model prediction. It is not proof of disease, lesion location, or clinical diagnosis.",
+  "score_notice": "The model score is a softmax output from this classifier and is not the probability that a patient has a disease."
+}

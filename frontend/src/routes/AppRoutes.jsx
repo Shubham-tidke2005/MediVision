@@ -250,6 +250,10 @@ import AdminSOSEventsPage
 import AdminAuditLogsPage
   from "@/features/admin/pages/AdminAuditLogsPage";
 
+
+
+import MedicalImagePage
+  from "@/features/medicalImage/pages/MedicalImagePage";
 // ======================================================
 // APP ROUTES
 // ======================================================
@@ -542,14 +546,11 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-              path="/medical-image"
-              element={
-                <PlaceholderPage
-                  title="Medical Image AI"
-                  description="AI-assisted medical-image screening."
-                />
-              }
-            />
+  path="/medical-image"
+  element={
+    <MedicalImagePage />
+  }
+/>
 
 
             {/* =========================================== */}

@@ -17,7 +17,6 @@ export const apiClient = axios.create({
 
   headers: {
     Accept: "application/json",
-    "Content-Type": "application/json",
   },
 });
 
@@ -33,6 +32,7 @@ apiClient.interceptors.request.use(
 
     return config;
   },
+
   (error) => {
     return Promise.reject(error);
   }
@@ -47,10 +47,14 @@ apiClient.interceptors.response.use(
       error.response?.status;
 
     const requestUrl =
-      String(error.config?.url ?? "");
+      String(
+        error.config?.url ?? ""
+      );
 
     const isLoginRequest =
-      requestUrl.includes("/auth/login");
+      requestUrl.includes(
+        "/auth/login"
+      );
 
     if (
       status === 401 &&
@@ -65,6 +69,8 @@ apiClient.interceptors.response.use(
       );
     }
 
-    return Promise.reject(error);
+    return Promise.reject(
+      error
+    );
   }
 );

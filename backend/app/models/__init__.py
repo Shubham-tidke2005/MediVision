@@ -74,6 +74,10 @@ from app.models.audit_log import (
     AuditLog,
 )
 
+from app.models.medical_image_analysis import (
+    MedicalImageAnalysis,
+)
+
 __all__ = [
     "User",
     "Address",

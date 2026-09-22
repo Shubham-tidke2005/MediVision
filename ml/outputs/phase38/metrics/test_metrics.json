@@ -1,0 +1,80 @@
+{
+  "test_images": 1584,
+  "accuracy": 0.9419191919191919,
+  "precision_macro": 0.9431551004611514,
+  "recall_macro": 0.9409832680240581,
+  "f1_macro": 0.940583127837559,
+  "class_wise_recall": {
+    "glioma": 0.8341968911917098,
+    "meningioma": 0.9472361809045227,
+    "no_tumor": 0.9975,
+    "pituitary": 0.985
+  },
+  "confusion_matrix": [
+    [
+      322,
+      38,
+      24,
+      2
+    ],
+    [
+      12,
+      377,
+      3,
+      6
+    ],
+    [
+      0,
+      1,
+      399,
+      0
+    ],
+    [
+      2,
+      3,
+      1,
+      394
+    ]
+  ],
+  "classification_report": {
+    "Glioma": {
+      "precision": 0.9583333333333334,
+      "recall": 0.8341968911917098,
+      "f1-score": 0.8919667590027701,
+      "support": 386.0
+    },
+    "Meningioma": {
+      "precision": 0.8997613365155132,
+      "recall": 0.9472361809045227,
+      "f1-score": 0.9228886168910648,
+      "support": 398.0
+    },
+    "No Tumor": {
+      "precision": 0.9344262295081968,
+      "recall": 0.9975,
+      "f1-score": 0.9649334945586457,
+      "support": 400.0
+    },
+    "Pituitary Tumor": {
+      "precision": 0.9800995024875622,
+      "recall": 0.985,
+      "f1-score": 0.9825436408977556,
+      "support": 400.0
+    },
+    "accuracy": 0.9419191919191919,
+    "macro avg": {
+      "precision": 0.9431551004611514,
+      "recall": 0.9409832680240581,
+      "f1-score": 0.940583127837559,
+      "support": 1584.0
+    },
+    "weighted avg": {
+      "precision": 0.9430757395190307,
+      "recall": 0.9419191919191919,
+      "f1-score": 0.9410351595203748,
+      "support": 1584.0
+    }
+  },
+  "model_file": "C:\\Shubham\\MediVision\\ml\\models\\brain_mri_resnet18.pth",
+  "note": "Scores describe model performance on the held-out dataset and are not clinical diagnostic probabilities."
+}

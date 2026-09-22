@@ -529,3 +529,17 @@ docs/_build/
 !backend/alembic.ini
 
 
+# Python virtual environments
+backend/.myenv/
+ml/.mlenv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment / secrets
+.env
+backend/.env
+frontend/.env
+ml/.env

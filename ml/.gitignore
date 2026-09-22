@@ -1,0 +1,18 @@
+# Phase 37 datasets are large and should not be committed.
+data/brain_mri/raw/*
+!data/brain_mri/raw/.gitkeep
+
+data/brain_mri/prepared/*
+!data/brain_mri/prepared/.gitkeep
+
+reports/*.csv
+reports/*.json
+
+__pycache__/
+*.pyc
+
+# ML datasets
+ml/data/
+
+# Generated outputs
+ml/outputs/

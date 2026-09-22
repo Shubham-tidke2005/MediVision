@@ -25,7 +25,16 @@ export default function AppShell() {
         text-slate-900
       "
     >
+      {/* ==============================================
+          DESKTOP SIDEBAR
+      ============================================== */}
+
       <Sidebar />
+
+
+      {/* ==============================================
+          MOBILE SIDEBAR
+      ============================================== */}
 
       <MobileSidebar
         open={mobileSidebarOpen}
@@ -34,32 +43,59 @@ export default function AppShell() {
         }
       />
 
+
+      {/* ==============================================
+          MAIN APPLICATION AREA
+      ============================================== */}
+
       <div
         className="
+          min-h-screen
           min-w-0
+
+          transition-[padding]
+          duration-200
 
           md:pl-20
           lg:pl-72
         "
       >
+        {/* HEADER */}
+
         <Header
           onOpenMenu={() =>
             setMobileSidebarOpen(true)
           }
         />
 
+
+        {/* PAGE CONTENT */}
+
         <main
           className="
             mx-auto
             w-full
             max-w-[1600px]
-            p-4
 
-            sm:p-6
-            lg:p-8
+            px-3
+            pb-6
+            pt-1
+
+            sm:px-5
+            sm:pb-8
+            sm:pt-2
+
+            lg:px-6
+            lg:pb-10
           "
         >
-          <Outlet />
+          <div
+            className="
+              min-w-0
+            "
+          >
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

@@ -11,175 +11,224 @@ export default function PublicFooter() {
   return (
     <footer
       className="
+        shrink-0
         border-t
-        border-slate-200
+        border-slate-200/80
         bg-white
       "
     >
       <div
         className="
           mx-auto
-          grid
-          max-w-7xl
-          grid-cols-1
-          gap-8
+          flex
+          max-w-6xl
+          flex-col
+          gap-4
           px-4
-          py-10
+          py-4
+
           sm:px-6
-          md:grid-cols-3
+
+          md:flex-row
+          md:items-center
+          md:justify-between
+
           lg:px-8
         "
       >
-        <div>
+        {/* BRAND */}
+
+        <Link
+          to="/"
+          className="
+            flex
+            w-fit
+            items-center
+            gap-2.5
+
+            rounded-lg
+
+            focus:outline-none
+            focus:ring-2
+            focus:ring-blue-600
+            focus:ring-offset-2
+          "
+        >
           <div
             className="
               flex
+              h-8
+              w-8
+              shrink-0
               items-center
-              gap-3
+              justify-center
+
+              rounded-full
+              bg-blue-600
+              text-white
+
+              shadow-sm
+              shadow-blue-600/20
             "
           >
-            <div
+            <HeartPulse
               className="
-                flex
-                h-9
-                w-9
-                items-center
-                justify-center
-                rounded-lg
-                bg-blue-600
-                text-white
+                h-4
+                w-4
               "
-            >
-              <HeartPulse className="h-5 w-5" />
-            </div>
+              aria-hidden="true"
+            />
+          </div>
 
-            <span
+          <div>
+            <p
               className="
+                text-sm
                 font-bold
                 text-slate-900
               "
             >
               MediVision AI
-            </span>
+            </p>
+
+            <p
+              className="
+                text-[11px]
+                text-slate-500
+              "
+            >
+              AI-assisted healthcare support
+            </p>
           </div>
+        </Link>
 
-          <p
+
+        {/* LINKS */}
+
+        <nav
+          aria-label="Footer navigation"
+          className="
+            flex
+            flex-wrap
+            items-center
+            gap-4
+          "
+        >
+          <Link
+            to="/services"
             className="
-              mt-4
-              max-w-sm
-              text-sm
-              leading-6
-              text-slate-500
+              rounded-md
+
+              text-xs
+              font-medium
+              text-slate-600
+
+              transition-colors
+
+              hover:text-blue-600
+
+              focus:outline-none
+              focus:ring-2
+              focus:ring-blue-600
+              focus:ring-offset-2
             "
           >
-            An integrated AI-assisted healthcare
-            platform designed to help organize care,
-            health information, appointments and
-            decision support.
-          </p>
-        </div>
+            Services
+          </Link>
 
-        <div>
-          <h2
+          <Link
+            to="/about"
             className="
-              text-sm
-              font-semibold
-              text-slate-900
+              rounded-md
+
+              text-xs
+              font-medium
+              text-slate-600
+
+              transition-colors
+
+              hover:text-blue-600
+
+              focus:outline-none
+              focus:ring-2
+              focus:ring-blue-600
+              focus:ring-offset-2
             "
           >
-            Platform
-          </h2>
+            About
+          </Link>
 
-          <div
+          <Link
+            to="/safety"
             className="
-              mt-4
-              space-y-3
-              text-sm
+              rounded-md
+
+              text-xs
+              font-medium
+              text-slate-600
+
+              transition-colors
+
+              hover:text-blue-600
+
+              focus:outline-none
+              focus:ring-2
+              focus:ring-blue-600
+              focus:ring-offset-2
             "
           >
-            <Link
-              to="/services"
-              className="
-                block
-                text-slate-500
-                hover:text-blue-600
-              "
-            >
-              Services
-            </Link>
+            AI & Safety
+          </Link>
+        </nav>
 
-            <Link
-              to="/about"
-              className="
-                block
-                text-slate-500
-                hover:text-blue-600
-              "
-            >
-              About
-            </Link>
 
-            <Link
-              to="/safety"
-              className="
-                block
-                text-slate-500
-                hover:text-blue-600
-              "
-            >
-              AI & Safety
-            </Link>
-          </div>
-        </div>
+        {/* COPYRIGHT */}
 
-        <div>
-          <h2
-            className="
-              text-sm
-              font-semibold
-              text-slate-900
-            "
-          >
-            Medical notice
-          </h2>
+        <p
+          className="
+            shrink-0
 
-          <p
-            className="
-              mt-4
-              text-sm
-              leading-6
-              text-slate-500
-            "
-          >
-            MediVision AI provides assistive
-            information and does not replace
-            evaluation, diagnosis, or treatment by
-            qualified healthcare professionals.
-          </p>
-        </div>
+            text-xs
+            font-medium
+            text-slate-500
+          "
+        >
+          © 2026 MediVision AI
+        </p>
       </div>
+
+
+      {/* MEDICAL NOTICE */}
 
       <div
         className="
           border-t
-          border-slate-200
+          border-slate-100
+
+          bg-slate-50/70
         "
       >
-        <div
+        <p
           className="
             mx-auto
-            max-w-7xl
+            max-w-6xl
+
             px-4
-            py-5
-            text-xs
+            py-2
+
+            text-center
+            text-[11px]
+            leading-5
             text-slate-500
+
             sm:px-6
             lg:px-8
           "
         >
-          © 2026 MediVision AI. Academic healthcare
-          platform project.
-        </div>
+          MediVision AI provides assistive information
+          and does not replace professional medical
+          evaluation, diagnosis, or treatment.
+        </p>
       </div>
     </footer>
   );
