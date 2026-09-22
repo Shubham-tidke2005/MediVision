@@ -4,11 +4,9 @@ import {
   Routes,
 } from "react-router-dom";
 
-import NearbyHealthcarePage
-  from "@/features/nearby/pages/NearbyHealthcarePage";
 
 // ======================================================
-// LAYOUTS.
+// LAYOUTS
 // ======================================================
 
 import AppShell from "@/components/layout/AppShell";
@@ -28,60 +26,86 @@ import {
 // AUTH
 // ======================================================
 
-import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
-import PublicOnlyRoute from "@/features/auth/components/PublicOnlyRoute";
-import RoleRoute from "@/features/auth/components/RoleRoute";
+import ProtectedRoute
+  from "@/features/auth/components/ProtectedRoute";
 
-import LoginPage from "@/features/auth/pages/LoginPage";
-import RegisterPage from "@/features/auth/pages/RegisterPage";
-import UnauthorizedPage from "@/features/auth/pages/UnauthorizedPage";
+import PublicOnlyRoute
+  from "@/features/auth/components/PublicOnlyRoute";
+
+import RoleRoute
+  from "@/features/auth/components/RoleRoute";
+
+import LoginPage
+  from "@/features/auth/pages/LoginPage";
+
+import RegisterPage
+  from "@/features/auth/pages/RegisterPage";
+
+import UnauthorizedPage
+  from "@/features/auth/pages/UnauthorizedPage";
 
 
 // ======================================================
 // COMMON APPLICATION PAGES
 // ======================================================
 
-import DashboardPage from "@/pages/DashboardPage";
-import NotFoundPage from "@/pages/NotFoundPage";
-import PlaceholderPage from "@/pages/PlaceholderPage";
+import DashboardPage
+  from "@/pages/DashboardPage";
+
+import NotFoundPage
+  from "@/pages/NotFoundPage";
+
+import PlaceholderPage
+  from "@/pages/PlaceholderPage";
 
 
 // ======================================================
 // PUBLIC WEBSITE
 // ======================================================
 
-import AboutPage from "@/pages/public/AboutPage";
-import HomePage from "@/pages/public/HomePage";
-import SafetyPage from "@/pages/public/SafetyPage";
-import ServicesPage from "@/pages/public/ServicesPage";
+import AboutPage
+  from "@/pages/public/AboutPage";
+
+import HomePage
+  from "@/pages/public/HomePage";
+
+import SafetyPage
+  from "@/pages/public/SafetyPage";
+
+import ServicesPage
+  from "@/pages/public/ServicesPage";
 
 
 // ======================================================
 // PATIENT
 // ======================================================
 
-import PatientProfilePage from "@/features/patient/pages/PatientProfilePage";
+import PatientProfilePage
+  from "@/features/patient/pages/PatientProfilePage";
 
 
 // ======================================================
 // PHASE 26 — MEDICAL HISTORY
 // ======================================================
 
-import PatientHistoryPage from "@/features/history/pages/PatientHistoryPage";
+import PatientHistoryPage
+  from "@/features/history/pages/PatientHistoryPage";
 
 
 // ======================================================
 // PHASE 27 — MEDICAL DOCUMENTS
 // ======================================================
 
-import PatientDocumentsPage from "@/features/documents/pages/PatientDocumentsPage";
+import PatientDocumentsPage
+  from "@/features/documents/pages/PatientDocumentsPage";
 
 
 // ======================================================
 // PHASE 28 — MEDICAL ACCESS CONTROL
 // ======================================================
 
-import PatientAccessPage from "@/features/access/pages/PatientAccessPage";
+import PatientAccessPage
+  from "@/features/access/pages/PatientAccessPage";
 
 
 // ======================================================
@@ -128,6 +152,30 @@ import HealthArticlePage
 
 
 // ======================================================
+// PHASE 45 — NEARBY HEALTHCARE
+// ======================================================
+
+import NearbyHealthcarePage
+  from "@/features/nearby/pages/NearbyHealthcarePage";
+
+
+// ======================================================
+// PHASE 46 — EMERGENCY SOS
+// ======================================================
+
+import EmergencySOSPage
+  from "@/features/sos/pages/EmergencySOSPage";
+
+
+// ======================================================
+// PHASE 47 — NOTIFICATIONS
+// ======================================================
+
+import NotificationsPage
+  from "@/features/notifications/pages/NotificationsPage";
+
+
+// ======================================================
 // DOCTOR
 // ======================================================
 
@@ -166,9 +214,45 @@ import EncounterPage
 
 
 // ======================================================
-// APP ROUTES
+// PHASE 48 — ADMIN
 // ======================================================
 
+import AdminDashboardPage
+  from "@/features/admin/pages/AdminDashboardPage";
+
+import AdminUsersPage
+  from "@/features/admin/pages/AdminUsersPage";
+
+import AdminPatientsPage
+  from "@/features/admin/pages/AdminPatientsPage";
+
+import AdminDoctorsPage
+  from "@/features/admin/pages/AdminDoctorsPage";
+
+import AdminSpecialtiesPage
+  from "@/features/admin/pages/AdminSpecialtiesPage";
+
+import AdminFacilitiesPage
+  from "@/features/admin/pages/AdminFacilitiesPage";
+
+import AdminAppointmentsPage
+  from "@/features/admin/pages/AdminAppointmentsPage";
+
+import AdminHealthArticlesPage
+  from "@/features/admin/pages/AdminHealthArticlesPage";
+
+import AdminAIAssessmentsPage
+  from "@/features/admin/pages/AdminAIAssessmentsPage";
+
+import AdminSOSEventsPage
+  from "@/features/admin/pages/AdminSOSEventsPage";
+
+import AdminAuditLogsPage
+  from "@/features/admin/pages/AdminAuditLogsPage";
+
+// ======================================================
+// APP ROUTES
+// ======================================================
 
 export default function AppRoutes() {
   return (
@@ -303,7 +387,7 @@ export default function AppRoutes() {
 
 
           {/* ============================================= */}
-          {/* NOTIFICATIONS                                 */}
+          {/* PHASE 47 — NOTIFICATIONS                      */}
           {/* PATIENT + DOCTOR + ADMIN                      */}
           {/* ============================================= */}
 
@@ -321,10 +405,7 @@ export default function AppRoutes() {
             <Route
               path="/notifications"
               element={
-                <PlaceholderPage
-                  title="Notifications"
-                  description="Review healthcare reminders and alerts."
-                />
+                <NotificationsPage />
               }
             />
           </Route>
@@ -352,6 +433,18 @@ export default function AppRoutes() {
               path="/patient/profile"
               element={
                 <PatientProfilePage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* PHASE 46 — EMERGENCY SOS                    */}
+            {/* =========================================== */}
+
+            <Route
+              path="/sos"
+              element={
+                <EmergencySOSPage />
               }
             />
 
@@ -445,7 +538,7 @@ export default function AppRoutes() {
 
             {/* =========================================== */}
             {/* MEDICAL IMAGE AI                            */}
-            {/* PHASE 37–40 CURRENTLY DEFERRED              */}
+            {/* PHASE 37–40 DEFERRED                        */}
             {/* =========================================== */}
 
             <Route
@@ -479,8 +572,7 @@ export default function AppRoutes() {
 
 
             {/* =========================================== */}
-            {/* DIET & ROUTINE                              */}
-            {/* PHASE 41 + PHASE 42                         */}
+            {/* PHASE 41 + 42 — DIET & ROUTINE              */}
             {/* =========================================== */}
 
             <Route
@@ -492,7 +584,7 @@ export default function AppRoutes() {
 
 
             {/* =========================================== */}
-            {/* PHASE 43 — PREVENTIVE HEALTH                */}
+            {/* PHASE 43 — HEALTH EDUCATION                 */}
             {/* =========================================== */}
 
             <Route
@@ -511,16 +603,15 @@ export default function AppRoutes() {
 
 
             {/* =========================================== */}
-            {/* NEARBY HEALTHCARE                           */}
-            {/* PHASE 45                                    */}
+            {/* PHASE 45 — NEARBY HEALTHCARE                */}
             {/* =========================================== */}
 
             <Route
-  path="/nearby"
-  element={
-    <NearbyHealthcarePage />
-  }
-/>
+              path="/nearby"
+              element={
+                <NearbyHealthcarePage />
+              }
+            />
 
           </Route>
 
@@ -593,7 +684,7 @@ export default function AppRoutes() {
 
 
           {/* ============================================= */}
-          {/* ADMIN ROUTES                                  */}
+          {/* PHASE 48 — ADMIN ROUTES                       */}
           {/* ============================================= */}
 
           <Route
@@ -607,33 +698,135 @@ export default function AppRoutes() {
           >
 
             {/* =========================================== */}
-            {/* DOCTOR VERIFICATION                         */}
+            {/* ADMIN DASHBOARD                             */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin"
+              element={
+                <AdminDashboardPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* USERS                                       */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin/users"
+              element={
+                <AdminUsersPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* PATIENTS                                    */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin/patients"
+              element={
+                <AdminPatientsPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* DOCTORS + VERIFICATION                      */}
             {/* =========================================== */}
 
             <Route
               path="/admin/doctors"
               element={
-                <PlaceholderPage
-                  title="Doctor Verification"
-                  description="Review and manage doctor verification."
-                />
+                <AdminDoctorsPage />
               }
             />
 
 
             {/* =========================================== */}
-            {/* AUDIT LOGS                                  */}
+            {/* SPECIALTIES                                 */}
             {/* =========================================== */}
 
             <Route
-              path="/admin/audit"
+              path="/admin/specialties"
               element={
-                <PlaceholderPage
-                  title="Audit Logs"
-                  description="Review system and security activity."
-                />
+                <AdminSpecialtiesPage />
               }
             />
+
+
+            {/* =========================================== */}
+            {/* FACILITIES                                  */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin/facilities"
+              element={
+                <AdminFacilitiesPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* APPOINTMENTS                                */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin/appointments"
+              element={
+                <AdminAppointmentsPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* HEALTH ARTICLES                             */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin/health-articles"
+              element={
+                <AdminHealthArticlesPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* AI ASSESSMENTS                              */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin/ai-assessments"
+              element={
+                <AdminAIAssessmentsPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* SOS EVENTS                                  */}
+            {/* =========================================== */}
+
+            <Route
+              path="/admin/sos"
+              element={
+                <AdminSOSEventsPage />
+              }
+            />
+
+
+            {/* =========================================== */}
+            {/* PHASE 49 — AUDIT LOGS                       */}
+            {/* =========================================== */}
+
+            <Route
+  path="/admin/audit"
+  element={
+    <AdminAuditLogsPage />
+  }
+/>
 
           </Route>
 

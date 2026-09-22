@@ -20,19 +20,24 @@ export default function MobileSidebar({
   open,
   onClose,
 }) {
+  const {
+    user,
+  } = useAuth();
+
+
   if (!open) {
     return null;
   }
 
-  const { user } = useAuth();
 
   const visibleItems =
     navigationItems.filter(
       (item) =>
-        item.roles.includes(
-        user.role
-      )
+        item.roles?.includes(
+          user?.role
+        )
     );
+
 
   return (
     <div
@@ -43,6 +48,8 @@ export default function MobileSidebar({
         md:hidden
       "
     >
+      {/* BACKDROP */}
+
       <button
         type="button"
         aria-label="Close navigation"
@@ -54,6 +61,9 @@ export default function MobileSidebar({
           backdrop-blur-sm
         "
       />
+
+
+      {/* SIDEBAR */}
 
       <aside
         className="
@@ -68,6 +78,8 @@ export default function MobileSidebar({
           shadow-xl
         "
       >
+        {/* HEADER */}
+
         <div
           className="
             flex
@@ -100,8 +112,10 @@ export default function MobileSidebar({
             >
               <HeartPulse
                 className="h-5 w-5"
+                aria-hidden="true"
               />
             </div>
+
 
             <div>
               <p
@@ -124,6 +138,7 @@ export default function MobileSidebar({
               </p>
             </div>
           </div>
+
 
           <button
             type="button"
@@ -149,9 +164,15 @@ export default function MobileSidebar({
               focus:ring-offset-2
             "
           >
-            <X className="h-5 w-5" />
+            <X
+              className="h-5 w-5"
+              aria-hidden="true"
+            />
           </button>
         </div>
+
+
+        {/* NAVIGATION */}
 
         <nav
           className="
@@ -160,16 +181,24 @@ export default function MobileSidebar({
             overflow-y-auto
             p-3
           "
+          aria-label="Mobile navigation"
         >
           {visibleItems.map(
             (item) => {
-              const Icon = item.icon;
+              const Icon =
+                item.icon;
 
               return (
                 <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={onClose}
+                  key={
+                    item.path
+                  }
+                  to={
+                    item.path
+                  }
+                  onClick={
+                    onClose
+                  }
                   className={({
                     isActive,
                   }) => `
@@ -209,14 +238,48 @@ export default function MobileSidebar({
                       w-5
                       shrink-0
                     "
+                    aria-hidden="true"
                   />
 
-                  {item.label}
+                  {
+                    item.label
+                  }
                 </NavLink>
               );
             }
           )}
         </nav>
+
+
+        {/* ROLE */}
+
+        <div
+          className="
+            border-t
+            border-slate-200
+            p-4
+          "
+        >
+          <div
+            className="
+              rounded-lg
+              bg-slate-50
+              p-3
+            "
+          >
+            <p
+              className="
+                text-xs
+                font-semibold
+                text-slate-700
+              "
+            >
+              {user?.role
+                ? `${user.role} account`
+                : "MediVision account"}
+            </p>
+          </div>
+        </div>
       </aside>
     </div>
   );

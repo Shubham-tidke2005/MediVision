@@ -86,6 +86,20 @@ from app.api.routes.nearby import (
     router as nearby_router,
 )
 
+from app.api.routes.sos import (
+    router as sos_router,
+)
+
+from app.api.routes.notifications import (
+    router as notifications_router,
+)
+
+from app.api.routes.admin import (
+    router as admin_router,
+)
+from app.api.routes.audit import (
+    router as audit_router,
+)
 # =========================================================
 # FASTAPI APPLICATION
 # =========================================================
@@ -241,4 +255,20 @@ app.include_router(
 
 app.include_router(
     nearby_router
+)
+
+app.include_router(
+    sos_router
+)
+
+app.include_router(
+    notifications_router
+)
+
+app.include_router(
+    admin_router
+)
+
+app.include_router(
+    audit_router
 )

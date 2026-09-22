@@ -6,11 +6,14 @@ import {
   useAuth,
 } from "@/features/auth/hooks/useAuth";
 
-import DoctorDashboardPage from "@/features/dashboard/pages/DoctorDashboardPage";
+import AdminDashboardPage
+  from "@/features/admin/pages/AdminDashboardPage";
 
-import PatientDashboardPage from "@/features/dashboard/pages/PatientDashboardPage";
+import DoctorDashboardPage
+  from "@/features/dashboard/pages/DoctorDashboardPage";
 
-import PlaceholderPage from "@/pages/PlaceholderPage";
+import PatientDashboardPage
+  from "@/features/dashboard/pages/PatientDashboardPage";
 
 
 export default function DashboardPage() {
@@ -24,6 +27,10 @@ export default function DashboardPage() {
   }
 
 
+  // ====================================================
+  // PATIENT DASHBOARD
+  // ====================================================
+
   if (
     user.role
     === ROLES.PATIENT
@@ -33,6 +40,10 @@ export default function DashboardPage() {
     );
   }
 
+
+  // ====================================================
+  // DOCTOR DASHBOARD
+  // ====================================================
 
   if (
     user.role
@@ -44,15 +55,16 @@ export default function DashboardPage() {
   }
 
 
+  // ====================================================
+  // ADMIN DASHBOARD
+  // ====================================================
+
   if (
     user.role
     === ROLES.ADMIN
   ) {
     return (
-      <PlaceholderPage
-        title="Admin Dashboard"
-        description="Review platform activity, doctor verification and administrative information."
-      />
+      <AdminDashboardPage />
     );
   }
 

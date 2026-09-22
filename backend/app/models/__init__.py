@@ -61,6 +61,19 @@ from app.models.sos import (
     SOSEvent,
     SOSEventAction,
 )
+
+from app.models.notification import (
+    Notification,
+)
+
+from app.models.healthcare_facility import (
+    HealthcareFacility,
+)
+
+from app.models.audit_log import (
+    AuditLog,
+)
+
 __all__ = [
     "User",
     "Address",

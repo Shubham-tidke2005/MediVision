@@ -45,6 +45,7 @@ function StatCard({
         shadow-sm
         transition-all
         duration-200
+
         hover:-translate-y-0.5
         hover:shadow-md
       "
@@ -286,6 +287,7 @@ export default function DoctorDashboardPage() {
             text-sm
             font-semibold
             text-white
+
             hover:bg-blue-700
           "
         >
@@ -327,6 +329,7 @@ export default function DoctorDashboardPage() {
           flex
           flex-col
           gap-4
+
           lg:flex-row
           lg:items-center
           lg:justify-between
@@ -350,6 +353,7 @@ export default function DoctorDashboardPage() {
               font-bold
               tracking-tight
               text-slate-900
+
               sm:text-3xl
             "
           >
@@ -389,6 +393,7 @@ export default function DoctorDashboardPage() {
             font-semibold
             text-white
             transition
+
             hover:bg-blue-700
             active:scale-[0.98]
           "
@@ -430,6 +435,7 @@ export default function DoctorDashboardPage() {
             flex
             flex-col
             gap-4
+
             sm:flex-row
             sm:items-center
             sm:justify-between
@@ -475,7 +481,9 @@ export default function DoctorDashboardPage() {
                 "
               >
                 Current status:{" "}
-                <span className="font-semibold">
+                <span
+                  className="font-semibold"
+                >
                   {
                     data.verification_status
                   }
@@ -524,6 +532,7 @@ export default function DoctorDashboardPage() {
                 text-xs
                 font-semibold
                 text-blue-600
+
                 hover:bg-slate-50
               "
             >
@@ -543,6 +552,7 @@ export default function DoctorDashboardPage() {
           grid
           grid-cols-1
           gap-4
+
           sm:grid-cols-2
           xl:grid-cols-4
         "
@@ -594,6 +604,7 @@ export default function DoctorDashboardPage() {
           grid
           grid-cols-1
           gap-6
+
           xl:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]
         "
       >
@@ -640,8 +651,9 @@ export default function DoctorDashboardPage() {
                   text-slate-500
                 "
               >
-                Your next appointment requests
-                and approved consultations.
+                Your next appointment
+                requests and approved
+                consultations.
               </p>
             </div>
 
@@ -652,6 +664,7 @@ export default function DoctorDashboardPage() {
                 text-sm
                 font-semibold
                 text-blue-600
+
                 hover:text-blue-700
               "
             >
@@ -695,8 +708,8 @@ export default function DoctorDashboardPage() {
                   text-slate-500
                 "
               >
-                New appointment requests will
-                appear here.
+                New appointment requests
+                will appear here.
               </p>
             </div>
           ) : (
@@ -717,6 +730,7 @@ export default function DoctorDashboardPage() {
                     className="
                       p-5
                       transition
+
                       hover:bg-slate-50
                     "
                   >
@@ -725,6 +739,7 @@ export default function DoctorDashboardPage() {
                         flex
                         flex-col
                         gap-4
+
                         sm:flex-row
                         sm:items-start
                         sm:justify-between
@@ -760,10 +775,12 @@ export default function DoctorDashboardPage() {
                             "
                           >
                             {
-                              appointment.patient_first_name
+                              appointment
+                                .patient_first_name
                             }{" "}
                             {
-                              appointment.patient_last_name
+                              appointment
+                                .patient_last_name
                             }
                           </h3>
                         </div>
@@ -777,7 +794,8 @@ export default function DoctorDashboardPage() {
                           "
                         >
                           {
-                            appointment.patient_code
+                            appointment
+                              .patient_code
                           }
                         </p>
 
@@ -817,7 +835,8 @@ export default function DoctorDashboardPage() {
 
                           <span>
                             {
-                              appointment.appointment_type
+                              appointment
+                                .appointment_type
                                 .replaceAll(
                                   "_",
                                   " "
@@ -827,28 +846,29 @@ export default function DoctorDashboardPage() {
                         </div>
 
 
-                        {appointment.reason && (
-                          <p
-                            className="
-                              mt-3
-                              line-clamp-2
-                              text-sm
-                              text-slate-500
-                            "
-                          >
-                            <span
+                        {appointment.reason
+                          && (
+                            <p
                               className="
-                                font-medium
-                                text-slate-700
+                                mt-3
+                                line-clamp-2
+                                text-sm
+                                text-slate-500
                               "
                             >
-                              Reason:
-                            </span>{" "}
-                            {
-                              appointment.reason
-                            }
-                          </p>
-                        )}
+                              <span
+                                className="
+                                  font-medium
+                                  text-slate-700
+                                "
+                              >
+                                Reason:
+                              </span>{" "}
+                              {
+                                appointment.reason
+                              }
+                            </p>
+                          )}
                       </div>
 
 
@@ -871,12 +891,12 @@ export default function DoctorDashboardPage() {
         {/* ============================================= */}
 
         <div
-          className="
-            space-y-6
-          "
+          className="space-y-6"
         >
 
-          {/* STATUS BREAKDOWN */}
+          {/* =========================================== */}
+          {/* STATUS BREAKDOWN                           */}
+          {/* =========================================== */}
 
           <section
             className="
@@ -936,7 +956,9 @@ export default function DoctorDashboardPage() {
                     "
                   >
                     <AppointmentStatusBadge
-                      status={status}
+                      status={
+                        status
+                      }
                     />
 
                     <span
@@ -959,7 +981,9 @@ export default function DoctorDashboardPage() {
           </section>
 
 
-          {/* QUICK ACTIONS */}
+          {/* =========================================== */}
+          {/* QUICK ACTIONS                               */}
+          {/* =========================================== */}
 
           <section
             className="
@@ -1002,6 +1026,7 @@ export default function DoctorDashboardPage() {
                   font-medium
                   text-slate-700
                   transition
+
                   hover:border-blue-200
                   hover:bg-blue-50
                   hover:text-blue-700
@@ -1042,6 +1067,7 @@ export default function DoctorDashboardPage() {
                   font-medium
                   text-slate-700
                   transition
+
                   hover:border-blue-200
                   hover:bg-blue-50
                   hover:text-blue-700
@@ -1082,6 +1108,7 @@ export default function DoctorDashboardPage() {
                   font-medium
                   text-slate-700
                   transition
+
                   hover:border-blue-200
                   hover:bg-blue-50
                   hover:text-blue-700
@@ -1105,8 +1132,50 @@ export default function DoctorDashboardPage() {
                   className="h-4 w-4"
                 />
               </Link>
+
+
+              <Link
+                to="/doctor/patients"
+                className="
+                  flex
+                  min-h-[48px]
+                  items-center
+                  justify-between
+                  rounded-lg
+                  border
+                  border-slate-200
+                  px-4
+                  text-sm
+                  font-medium
+                  text-slate-700
+                  transition
+
+                  hover:border-blue-200
+                  hover:bg-blue-50
+                  hover:text-blue-700
+                "
+              >
+                <span
+                  className="
+                    flex
+                    items-center
+                    gap-3
+                  "
+                >
+                  <UserRound
+                    className="h-4 w-4"
+                  />
+
+                  Patient Records
+                </span>
+
+                <ArrowRight
+                  className="h-4 w-4"
+                />
+              </Link>
             </div>
           </section>
+
         </div>
       </div>
     </div>

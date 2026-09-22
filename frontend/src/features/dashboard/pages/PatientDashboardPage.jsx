@@ -10,7 +10,9 @@ import {
   CheckCircle2,
   Clock3,
   FileHeart,
+  MapPin,
   Search,
+  ShieldAlert,
   Stethoscope,
   UserRound,
 } from "lucide-react";
@@ -372,31 +374,171 @@ export default function PatientDashboardPage() {
         </div>
 
 
+        <div
+          className="
+            flex
+            flex-wrap
+            gap-2
+          "
+        >
+          {/* PHASE 46 — SOS */}
+
+          <Link
+            to="/sos"
+            className="
+              inline-flex
+              min-h-[44px]
+              items-center
+              justify-center
+              gap-2
+              rounded-lg
+              bg-rose-600
+              px-4
+              text-sm
+              font-semibold
+              text-white
+              transition
+
+              hover:bg-rose-700
+              active:scale-[0.98]
+            "
+          >
+            <ShieldAlert
+              className="h-4 w-4"
+            />
+
+            Emergency SOS
+          </Link>
+
+
+          <Link
+            to="/doctors"
+            className="
+              inline-flex
+              min-h-[44px]
+              items-center
+              justify-center
+              gap-2
+              rounded-lg
+              bg-blue-600
+              px-4
+              text-sm
+              font-semibold
+              text-white
+              transition
+
+              hover:bg-blue-700
+              active:scale-[0.98]
+            "
+          >
+            <Search
+              className="h-4 w-4"
+            />
+
+            Find Doctors
+          </Link>
+        </div>
+      </section>
+
+
+      {/* =============================================== */}
+      {/* EMERGENCY SUPPORT NOTICE                        */}
+      {/* =============================================== */}
+
+      <section
+        className="
+          flex
+          flex-col
+          gap-4
+          rounded-xl
+          border
+          border-rose-200
+          bg-rose-50
+          p-5
+
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+        "
+      >
+        <div
+          className="
+            flex
+            items-start
+            gap-3
+          "
+        >
+          <div
+            className="
+              flex
+              h-10
+              w-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-xl
+              bg-rose-100
+              text-rose-700
+            "
+          >
+            <ShieldAlert
+              className="h-5 w-5"
+            />
+          </div>
+
+          <div>
+            <h2
+              className="
+                font-semibold
+                text-rose-900
+              "
+            >
+              Need emergency support?
+            </h2>
+
+            <p
+              className="
+                mt-1
+                max-w-2xl
+                text-sm
+                leading-6
+                text-rose-700
+              "
+            >
+              Open Emergency SOS for
+              emergency-service shortcuts,
+              emergency contacts, optional
+              location sharing and nearby
+              hospitals.
+            </p>
+          </div>
+        </div>
+
+
         <Link
-          to="/doctors"
+          to="/sos"
           className="
             inline-flex
-            min-h-[44px]
+            min-h-[42px]
+            shrink-0
             items-center
             justify-center
             gap-2
             rounded-lg
-            bg-blue-600
+            bg-rose-600
             px-4
             text-sm
             font-semibold
             text-white
-            transition
 
-            hover:bg-blue-700
-            active:scale-[0.98]
+            hover:bg-rose-700
           "
         >
-          <Search
+          <ShieldAlert
             className="h-4 w-4"
           />
 
-          Find Doctors
+          Open SOS
         </Link>
       </section>
 
@@ -991,6 +1133,94 @@ export default function PatientDashboardPage() {
                 space-y-2
               "
             >
+
+              {/* PHASE 46 — EMERGENCY SOS */}
+
+              <Link
+                to="/sos"
+                className="
+                  flex
+                  min-h-[52px]
+                  items-center
+                  justify-between
+                  rounded-lg
+                  border
+                  border-rose-200
+                  bg-rose-50
+                  px-4
+                  text-sm
+                  font-semibold
+                  text-rose-700
+                  transition
+
+                  hover:border-rose-300
+                  hover:bg-rose-100
+                  hover:text-rose-800
+                "
+              >
+                <span
+                  className="
+                    flex
+                    items-center
+                    gap-3
+                  "
+                >
+                  <ShieldAlert
+                    className="h-4 w-4"
+                  />
+
+                  Emergency SOS
+                </span>
+
+                <ArrowRight
+                  className="h-4 w-4"
+                />
+              </Link>
+
+
+              {/* PHASE 45 — NEARBY HEALTHCARE */}
+
+              <Link
+                to="/nearby"
+                className="
+                  flex
+                  min-h-[48px]
+                  items-center
+                  justify-between
+                  rounded-lg
+                  border
+                  border-slate-200
+                  px-4
+                  text-sm
+                  font-medium
+                  text-slate-700
+                  transition
+
+                  hover:border-blue-200
+                  hover:bg-blue-50
+                  hover:text-blue-700
+                "
+              >
+                <span
+                  className="
+                    flex
+                    items-center
+                    gap-3
+                  "
+                >
+                  <MapPin
+                    className="h-4 w-4"
+                  />
+
+                  Nearby Healthcare
+                </span>
+
+                <ArrowRight
+                  className="h-4 w-4"
+                />
+              </Link>
+
+
               <Link
                 to="/doctors"
                 className="
@@ -1074,7 +1304,7 @@ export default function PatientDashboardPage() {
 
 
               <Link
-                to="/medical-history"
+                to="/patient/history"
                 className="
                   flex
                   min-h-[48px]
@@ -1194,8 +1424,10 @@ export default function PatientDashboardPage() {
                   className="h-4 w-4"
                 />
               </Link>
+
             </div>
           </section>
+
         </div>
       </div>
     </div>
