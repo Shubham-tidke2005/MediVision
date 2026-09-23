@@ -7,7 +7,7 @@ MediVision AI is a full-stack healthcare web application that brings multiple he
 
 > **Important:** MediVision AI is designed for **healthcare assistance and decision support only**. It does **not** replace qualified healthcare professionals and does not provide final medical diagnoses or prescriptions.
 
----
+----
 
 ## Table of Contents
 
