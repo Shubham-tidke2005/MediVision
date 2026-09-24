@@ -1,64 +1,57 @@
-# MediVision AI — API Overview
-
-## Base URL
-
-```text
-http://localhost:8000/api/v1
-```
+# API Overview
 
 Swagger:
 
 ```text
-http://localhost:8000/docs
+http://127.0.0.1:8000/docs
 ```
 
-## Main API Groups
+OpenAPI JSON:
 
 ```text
-/auth
-/patients
-/doctors
-/availability
-/discovery
-/appointments
-/encounters
-/diagnoses
-/prescriptions
-/medical-documents
-/medical-access
-/medication-reminders
-/symptoms
-/ai
-/diet
-/activity
-/health-education
-/nearby
-/sos
-/notifications
-/admin
-/medical-image
-/doctor/patient-records
+http://127.0.0.1:8000/openapi.json
 ```
 
-## Common Status Codes
+The current backend registers router modules for:
 
 ```text
-200 OK
-201 Created
-400 Bad Request
-401 Unauthorized
-403 Forbidden
-404 Not Found
-409 Conflict
-422 Unprocessable Entity
-500 Internal Server Error
-503 Service Unavailable
+auth
+health
+access_test
+patients
+doctors
+availability
+discovery
+recommended_doctors
+appointments
+encounters
+diagnoses
+prescriptions
+medical_documents
+medical_access
+medication_reminders
+symptom
+ai
+diet
+activity
+health_education
+nearby
+sos
+notifications
+admin
+audit
+medical_image
+doctor_patient_records
 ```
 
-## Authentication Header
+Confirmed current Swagger endpoints include:
 
-```http
-Authorization: Bearer <access_token>
+```text
+GET  /api/v1/admin/audit-logs
+POST /api/v1/medical-image/screen
+GET  /api/v1/medical-image/analyses
+GET  /api/v1/doctor/patient-records
+GET  /api/v1/doctor/patient-records/{patient_id}
 ```
 
-Swagger should be treated as the authoritative source for the exact currently registered route set.
+For every endpoint not explicitly listed here, use the live Swagger/OpenAPI output as the authoritative source.

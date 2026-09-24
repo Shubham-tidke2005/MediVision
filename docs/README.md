@@ -1,46 +1,44 @@
 # MediVision AI — Documentation
 
-This folder contains the project documentation for **MediVision AI**.
+This documentation is aligned to the current repository structure and currently registered frontend/backend modules.
 
-## Structure
+## API
 
-```text
-docs/
-├── api/
-├── database/
-├── diagrams/
-├── reports/
-└── research/
-```
+- [API Overview](api/API_OVERVIEW.md)
+- [Authentication](api/AUTHENTICATION.md)
+- [Patient API](api/PATIENT_API.md)
+- [Doctor API](api/DOCTOR_API.md)
+- [Admin API](api/ADMIN_API.md)
+- [AI API](api/AI_API.md)
+- [Medical Image API](api/MEDICAL_IMAGE_API.md)
+- [Frontend Routes](api/FRONTEND_ROUTES.md)
+- [Backend Routers](api/BACKEND_ROUTERS.md)
+- [Doctor Patient Records API](api/DOCTOR_PATIENT_RECORDS_API.md)
 
-### API
+## Database
 
-Contains documentation for backend endpoints, authentication, patient/doctor/admin APIs, AI symptom assessment and medical-image screening.
+- [Database Design](database/DATABASE_DESIGN.md)
+- [Tables & Relationships](database/TABLES_AND_RELATIONSHIPS.md)
+- [Migrations](database/MIGRATIONS.md)
 
-### Database
+## Diagrams
 
-Contains database design, major tables, relationships and migration notes.
+- [System Architecture](diagrams/SYSTEM_ARCHITECTURE.md)
+- [Database ER Diagram](diagrams/DATABASE_ER_DIAGRAM.md)
+- [Workflow Diagrams](diagrams/WORKFLOW_DIAGRAMS.md)
+- [Frontend Route Map](diagrams/FRONTEND_ROUTE_MAP.md)
 
-### Diagrams
+## Reports
 
-Contains system architecture, ER relationships and major workflow diagrams using Mermaid.
+- [Project Progress](reports/PROJECT_PROGRESS.md)
+- [Testing Report](reports/TESTING_REPORT.md)
+- [Security Review](reports/SECURITY_REVIEW.md)
+- [Demo Flow](reports/DEMO_FLOW.md)
 
-### Reports
+## Research
 
-Contains project progress, testing status, security checklist and demo workflow.
-
-### Research
-
-Contains the AI/ML research documentation, Brain MRI dataset details, ResNet18 training, Grad-CAM and limitations.
-
----
-
-## Project
-
-**MediVision AI**
-
-**Predict • Prevent • Monitor • Recover**
-
-MediVision AI is an AI-assisted healthcare support and clinical decision-support project.
-
-> MediVision AI is an academic project. AI outputs are for assistance and screening only and must not be treated as a final medical diagnosis or medical prescription.
+- [AI/ML Overview](research/AI_ML_OVERVIEW.md)
+- [Brain MRI Dataset](research/BRAIN_MRI_DATASET.md)
+- [ResNet18 Results](research/RESNET18_RESULTS.md)
+- [Grad-CAM](research/GRADCAM.md)
+- [Limitations](research/LIMITATIONS.md)

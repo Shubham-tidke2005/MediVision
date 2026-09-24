@@ -1,118 +1,177 @@
-# Tables & Relationships
+# MediVision AI — Tables & Relationships
 
-## Identity
+## Current Table Count
+
+```text
+40 tables
+```
+
+## Domain Groups
+
+### Identity
 
 ```text
 users
 patients
 doctors
+addresses
 ```
 
-Role:
+### Doctor Setup
 
 ```text
-PATIENT
-DOCTOR
-ADMIN
+specialties
+doctor_specialties
+doctor_availability_rules
+doctor_time_off
+doctor_slots
+doctor_slot_status_history
 ```
 
-## Doctor Verification
+### Appointment / Clinical
 
 ```text
-PENDING
-VERIFIED
-REJECTED
-SUSPENDED
+appointments
+appointment_status_history
+encounters
+diagnoses
+encounter_diagnoses
+medicines
+prescriptions
+prescription_items
 ```
 
-## Appointments
-
-Types:
+### Patient Records
 
 ```text
-IN_PERSON
-ONLINE
+medical_documents
+medical_access_grants
+patient_medications
+medication_schedules
+medication_adherence_logs
 ```
 
-Statuses:
+### Health & Wellness
 
 ```text
-PENDING
-APPROVED
-REJECTED
-CANCELLED
-COMPLETED
-NO_SHOW
+health_metric_types
+health_measurements
+diet_plans
+diet_plan_items
+activity_plans
+activity_plan_items
+activity_logs
+health_articles
 ```
 
-## Encounters
+### AI
 
 ```text
-IN_PERSON
-ONLINE
-EMERGENCY
-FOLLOW_UP
+symptoms
+ai_symptom_assessments
+medical_image_analyses
 ```
 
-## Diagnosis
+### Facility / Emergency / Notifications
 
 ```text
-PRIMARY
-SECONDARY
-SUSPECTED
+healthcare_facilities
+sos_events
+sos_event_actions
+notifications
 ```
 
-## Medical Access
+### Security / Infrastructure
 
 ```text
-FULL_HISTORY
-APPOINTMENT_ONLY
-DOCUMENTS_ONLY
+audit_logs
+alembic_version
 ```
 
-## Medication
+---
 
-Status:
+# Core Relationships
 
 ```text
-ACTIVE
-COMPLETED
-STOPPED
+users
+ ├── 0..1 patients
+ └── 0..1 doctors
+
+addresses
+ ├── 0..N patients
+ └── 0..N doctors
+
+doctors
+ ├── N..N specialties via doctor_specialties
+ ├── 0..N doctor_availability_rules
+ ├── 0..N doctor_time_off
+ ├── 0..N doctor_slots
+ ├── 0..N appointments
+ ├── 0..N encounters
+ └── 0..N prescriptions
+
+patients
+ ├── 0..N appointments
+ ├── 0..N encounters
+ ├── 0..N prescriptions
+ ├── 0..N medical_documents
+ ├── 0..N medical_access_grants
+ ├── 0..N patient_medications
+ ├── 0..N health_measurements
+ ├── 0..N diet_plans
+ ├── 0..N activity_plans
+ ├── 0..N activity_logs
+ ├── 0..N ai_symptom_assessments
+ ├── 0..N medical_image_analyses
+ └── 0..N sos_events
+
+appointments
+ ├── 0..N appointment_status_history
+ └── 0..1 encounter
+
+encounters
+ ├── 0..N encounter_diagnoses
+ └── 0..1 prescription
+
+prescriptions
+ └── 0..N prescription_items
+
+patient_medications
+ └── 0..N medication_schedules
+
+medication_schedules
+ └── 0..N medication_adherence_logs
+
+sos_events
+ └── 0..N sos_event_actions
 ```
 
-Adherence:
+---
+
+# Important Domain Meaning
 
 ```text
-TAKEN
-MISSED
-SKIPPED
-LATE
-```
+Appointment
+= scheduling/workflow
 
-## SOS
+Encounter
+= actual clinical consultation
 
-```text
-TRIGGERED
-ACKNOWLEDGED
-RESOLVED
-CANCELLED
-```
+Diagnosis
+= clinician-linked clinical record
 
-## Important Relationships
+AI symptom assessment
+= AI decision-support output
 
-```mermaid
-erDiagram
-    USERS ||--o| PATIENTS : has
-    USERS ||--o| DOCTORS : has
-    PATIENTS ||--o{ APPOINTMENTS : books
-    DOCTORS ||--o{ APPOINTMENTS : receives
-    APPOINTMENTS ||--o| ENCOUNTERS : creates
-    ENCOUNTERS ||--o{ ENCOUNTER_DIAGNOSES : contains
-    ENCOUNTERS ||--o| PRESCRIPTIONS : creates
-    PATIENTS ||--o{ MEDICAL_DOCUMENTS : owns
-    PATIENTS ||--o{ MEDICAL_ACCESS_GRANTS : grants
-    DOCTORS ||--o{ MEDICAL_ACCESS_GRANTS : receives
-    PATIENTS ||--o{ AI_SYMPTOM_ASSESSMENTS : owns
-    PATIENTS ||--o{ MEDICAL_IMAGE_ANALYSES : owns
-    USERS ||--o{ AUDIT_LOGS : generates
+Prescription
+= clinician record
+
+Medication reminder
+= adherence support
+
+Medical access grant
+= Patient-controlled Doctor access
+
+Medical image analysis
+= AI screening/classification metadata
 ```
