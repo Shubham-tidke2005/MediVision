@@ -105,6 +105,10 @@ from app.api.routes.medical_image import (
     router as medical_image_router,
 )
 
+from app.api.routes.doctor_patient_records import (
+    router as doctor_patient_records_router,
+)
+
 # =========================================================
 # FASTAPI APPLICATION
 # =========================================================
@@ -280,4 +284,8 @@ app.include_router(
 
 app.include_router(
     medical_image_router
+)
+
+app.include_router(
+    doctor_patient_records_router
 )

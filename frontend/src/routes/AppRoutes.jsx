@@ -254,6 +254,11 @@ import AdminAuditLogsPage
 
 import MedicalImagePage
   from "@/features/medicalImage/pages/MedicalImagePage";
+
+
+import DoctorPatientRecordsPage
+  from "@/features/doctorPatientRecords/pages/DoctorPatientRecordsPage";
+
 // ======================================================
 // APP ROUTES
 // ======================================================
@@ -672,14 +677,11 @@ export default function AppRoutes() {
             {/* =========================================== */}
 
             <Route
-              path="/doctor/patients"
-              element={
-                <PlaceholderPage
-                  title="Patient Records"
-                  description="Access authorized patient information."
-                />
-              }
-            />
+  path="/doctor/patients"
+  element={
+    <DoctorPatientRecordsPage />
+  }
+/>
 
           </Route>
 
