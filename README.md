@@ -14,9 +14,9 @@
 
 ## Overview
 
-**MediVision AI** is a role-based healthcare web platform integrating patient services, doctor workflows, appointments, clinical records, AI-assisted symptom assessment, limited medical-image screening, health tracking, wellness support, nearby healthcare discovery, emergency support, notifications, administration and audit logging.
+**MediVision AI** is a role-based healthcare web platform that combines patient services, doctor workflows, appointments, clinical records, AI-assisted symptom assessment, medical-image screening, health tracking, wellness support, nearby healthcare discovery, emergency support, notifications, administration and audit logging.
 
-Roles:
+The current application supports three main roles:
 
 ```text
 PATIENT
@@ -25,40 +25,89 @@ ADMIN
 ```
 
 > [!IMPORTANT]
-> MediVision AI is an academic healthcare-support project. AI outputs are intended for assistance, screening and decision support only. They are not a final medical diagnosis, autonomous prescription, or replacement for a qualified healthcare professional.
+> MediVision AI is an academic healthcare-support project. AI-generated outputs are intended for assistance, screening and decision support only. They must not be treated as a final medical diagnosis, autonomous prescription or replacement for a qualified healthcare professional.
 
 ---
 
-## Current Application Modules
+# ✨ Key Features
 
-| Area | Current functionality |
+| Module | Functionality |
 |---|---|
-| Authentication | JWT-based login and protected routes |
-| Patient | Profile, history, documents, medical access, medications, health tracking |
-| Doctor | Profile, availability, appointments, encounters, authorized patient records |
-| Appointments | Patient + Doctor appointment workflow |
+| Authentication | JWT-based authentication and protected routes |
+| Patient Profile | Patient demographic/profile management |
+| Doctor Profile | Doctor professional profile |
+| Doctor Verification | Admin-controlled professional verification |
+| Doctor Availability | Availability rules, time off and appointment slots |
+| Appointments | Patient booking and doctor approval/rejection workflow |
 | Encounters | Doctor consultation workflow |
-| Diagnoses | Clinical diagnosis records |
-| Prescriptions | Prescription workflow |
-| Symptom AI | AI-assisted possible conditions, urgency and specialty recommendation |
-| Doctor Discovery | Doctor search and recommended doctors |
-| Medical Image AI | Brain MRI ResNet18 classification + Grad-CAM |
-| Wellness | Diet and routine support |
-| Health Education | Preventive-health content |
-| Nearby Healthcare | Location/map-based healthcare discovery |
+| Diagnoses | Encounter-linked clinical diagnoses |
+| Prescriptions | Prescription and prescription-item management |
+| Medical History | Digital Patient history |
+| Medical Documents | Patient document upload and management |
+| Medical Access | Patient-controlled Doctor access |
+| Medication Management | Medications, schedules and adherence tracking |
+| Health Tracking | Health metric types and measurements |
+| Symptom Assessment | AI-assisted possible conditions and specialty recommendation |
+| Doctor Discovery | Find Doctors and view Doctor details |
+| Medical Image AI | Brain MRI classification using ResNet18 + Grad-CAM |
+| Wellness | Diet and activity support |
+| Health Education | Preventive-health articles |
+| Nearby Healthcare | Nearby healthcare discovery |
 | Emergency SOS | Emergency-support workflow |
 | Notifications | Shared notification center |
-| Admin | Users, patients, doctors, specialties, facilities, appointments, articles, AI, SOS |
-| Audit | Admin audit-log view |
-| Doctor Patient Records | Authorized patient directory and restricted record view |
+| Admin Dashboard | User, Patient, Doctor and platform management |
+| Audit Logs | Security and workflow audit events |
+| Doctor Patient Records | Authorized Patient directory and restricted record access |
 
 ---
 
-## Current Frontend Routes
+# 🖼️ UI Preview
 
-Source: `frontend/src/routes/AppRoutes.jsx`.
+> Add the PNG screenshots to `docs/ui/` using the filenames shown below.
 
-### Public
+## Public Home
+
+![MediVision AI Public Home](docs/ui/public-home.png)
+
+## Login
+
+![MediVision AI Login](docs/ui/login-page.png)
+
+## Patient Dashboard
+
+![MediVision AI Patient Dashboard](docs/ui/patient-dashboard.png)
+
+## AI Symptom Assessment
+
+![MediVision AI Symptom Assessment](docs/ui/symptom-assessment.png)
+
+## Medical Image Screening
+
+![MediVision AI Medical Image Screening](docs/ui/medical-image-screening.png)
+
+## Doctor Dashboard
+
+![MediVision AI Doctor Dashboard](docs/ui/doctor-dashboard.png)
+
+## Doctor Patient Records
+
+![MediVision AI Doctor Patient Records](docs/ui/doctor-patient-records.png)
+
+## Admin Dashboard
+
+![MediVision AI Admin Dashboard](docs/ui/admin-dashboard.png)
+
+For the full UI gallery, see:
+
+[`docs/ui/README.md`](docs/ui/README.md)
+
+---
+
+# 🧭 Current Frontend Routes
+
+The following routes are currently registered in `frontend/src/routes/AppRoutes.jsx`.
+
+## Public
 
 ```text
 /
@@ -69,7 +118,7 @@ Source: `frontend/src/routes/AppRoutes.jsx`.
 /register
 ```
 
-### Shared Authenticated
+## Shared Authenticated
 
 ```text
 /dashboard
@@ -77,7 +126,7 @@ Source: `frontend/src/routes/AppRoutes.jsx`.
 /notifications
 ```
 
-### Patient
+## Patient
 
 ```text
 /appointments
@@ -85,7 +134,7 @@ Source: `frontend/src/routes/AppRoutes.jsx`.
 /sos
 /patient/medications
 /patient/history
-/medical-history        → redirects to /patient/history
+/medical-history
 /patient/documents
 /patient/access
 /health
@@ -99,7 +148,13 @@ Source: `frontend/src/routes/AppRoutes.jsx`.
 /nearby
 ```
 
-### Doctor
+`/medical-history` redirects to:
+
+```text
+/patient/history
+```
+
+## Doctor
 
 ```text
 /appointments
@@ -109,7 +164,7 @@ Source: `frontend/src/routes/AppRoutes.jsx`.
 /doctor/patients
 ```
 
-### Admin
+## Admin
 
 ```text
 /admin
@@ -127,87 +182,16 @@ Source: `frontend/src/routes/AppRoutes.jsx`.
 
 ---
 
-## Current Project Structure
+# 🧩 Backend Architecture
+
+The current backend uses both:
 
 ```text
-MediVision/
-├── .github/
-├── backend/
-│   ├── .myenv/
-│   ├── alembic/
-│   ├── app/
-│   │   ├── ai/
-│   │   ├── api/
-│   │   │   ├── routes/
-│   │   │   ├── v1/
-│   │   │   └── dependencies.py
-│   │   ├── core/
-│   │   ├── dependencies/
-│   │   ├── models/
-│   │   ├── providers/
-│   │   ├── repositories/
-│   │   ├── schemas/
-│   │   ├── scripts/
-│   │   ├── seeds/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   ├── __init__.py
-│   │   └── main.py
-│   ├── scripts/
-│   ├── tests/
-│   ├── uploads/
-│   ├── alembic.ini
-│   ├── pytest.ini
-│   ├── requirements-phase40.txt
-│   └── requirements.txt
-├── docs/
-│   ├── api/
-│   ├── database/
-│   ├── diagrams/
-│   ├── reports/
-│   └── research/
-├── frontend/
-│   ├── public/
-│   └── src/
-│       ├── api/
-│       ├── assets/
-│       ├── components/
-│       ├── config/
-│       ├── constants/
-│       ├── features/
-│       ├── hooks/
-│       ├── lib/
-│       ├── pages/
-│       ├── routes/
-│       ├── schemas/
-│       ├── utils/
-│       ├── App.jsx
-│       └── main.jsx
-├── ml/
-│   ├── .mlenv/
-│   ├── data/brain_mri/
-│   ├── models/
-│   ├── outputs/phase38/
-│   ├── outputs/phase39/
-│   ├── reports/
-│   ├── src/
-│   ├── README_PHASE37.md
-│   ├── README_PHASE38.md
-│   ├── README_PHASE39.md
-│   └── requirements.txt
-├── scripts/
-├── tests/
-├── .gitignore
-└── README.md
+app/api/v1/
+app/api/routes/
 ```
 
-> Local virtual environments, `.env`, `node_modules`, generated output and raw datasets should remain excluded from Git when appropriate.
-
----
-
-## Backend Router Registration
-
-Current `backend/app/main.py` registers router modules for:
+Registered router modules include:
 
 ```text
 auth
@@ -239,20 +223,7 @@ medical_image
 doctor_patient_records
 ```
 
-The current project uses both:
-
-```text
-app/api/v1/
-app/api/routes/
-```
-
-for route modules.
-
----
-
-## Confirmed Current Swagger Endpoints
-
-The current Swagger UI confirms:
+Current confirmed Swagger endpoints include:
 
 ```text
 GET  /api/v1/admin/audit-logs
@@ -264,7 +235,7 @@ GET  /api/v1/doctor/patient-records
 GET  /api/v1/doctor/patient-records/{patient_id}
 ```
 
-Use the live Swagger UI as the authoritative endpoint list:
+Live Swagger:
 
 ```text
 http://127.0.0.1:8000/docs
@@ -272,7 +243,74 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## AI-assisted Symptom Assessment
+# 🗄️ Current Database
+
+The current PostgreSQL database contains **40 tables**.
+
+Major domain groups:
+
+```text
+Identity
+Doctor setup
+Availability
+Appointments
+Clinical records
+Medical documents
+Medical access
+Medication management
+Health tracking
+Diet
+Activity
+Health education
+AI symptom assessment
+Medical image analysis
+Facilities
+SOS
+Notifications
+Audit logging
+```
+
+Important current enum values include:
+
+```text
+UserRole:
+PATIENT
+DOCTOR
+ADMIN
+
+AppointmentStatus:
+REQUESTED
+APPROVED
+REJECTED
+CANCELLED
+COMPLETED
+NO_SHOW
+
+AppointmentType:
+IN_PERSON
+ONLINE
+PHONE
+
+SlotStatus:
+AVAILABLE
+HELD
+BOOKED
+BLOCKED
+
+AccessScope:
+FULL_HISTORY
+APPOINTMENT_ONLY
+```
+
+Detailed schema documentation:
+
+[`docs/database/DATABASE_SCHEMA_CURRENT.md`](docs/database/DATABASE_SCHEMA_CURRENT.md)
+
+---
+
+# 🤖 AI Symptom Assessment
+
+Conceptual workflow:
 
 ```text
 Patient Symptoms
@@ -292,11 +330,22 @@ Urgency + Red Flags
 Safety Message
 ```
 
-Use terminology such as **AI-assisted symptom assessment** and **possible conditions**, not confirmed diagnosis.
+Use terminology such as:
+
+```text
+AI-assisted symptom assessment
+Possible conditions
+Recommended specialty
+Clinical decision support
+```
+
+Avoid presenting AI output as a confirmed medical diagnosis.
 
 ---
 
-## Brain MRI Computer Vision
+# 🧠 Brain MRI Computer Vision
+
+The medical-image feature performs four-class Brain MRI classification.
 
 Classes:
 
@@ -325,17 +374,27 @@ Held-out test-set results:
 | Macro Recall | 94.10% |
 | Macro F1 | 94.06% |
 
+Per-class recall:
+
+| Class | Recall |
+|---|---:|
+| Glioma | 83.42% |
+| Meningioma | 94.72% |
+| No Tumor | 99.75% |
+| Pituitary Tumor | 98.50% |
+
 Grad-CAM target:
 
 ```text
 layer4.1.conv2
 ```
 
-> These are held-out dataset classification results, not validated clinical diagnostic performance.
+> [!WARNING]
+> These are held-out dataset classification metrics. They must not be described as proven clinical diagnostic performance.
 
 ---
 
-## Medical Image Screening
+# 🖼️ Medical Image Screening Flow
 
 Frontend:
 
@@ -372,11 +431,25 @@ Safety Message
 Suggested Specialty
 ```
 
-Never label the result **Final Diagnosis**.
+Correct wording:
+
+```text
+AI-assisted screening result
+Possible class
+Model score
+Grad-CAM visualization
+Suggested specialty
+```
+
+Never label the result:
+
+```text
+Final Diagnosis
+```
 
 ---
 
-## Doctor Patient Records
+# 👨‍⚕️ Doctor Patient Records
 
 Frontend:
 
@@ -391,13 +464,22 @@ GET /api/v1/doctor/patient-records
 GET /api/v1/doctor/patient-records/{patient_id}
 ```
 
-A Doctor should see Patient records only through an authorized relationship such as an appointment relationship or active Patient-controlled medical-access grant. A UUID alone is not authorization.
+The Doctor must have an authorized relationship with the Patient.
+
+Current access scopes:
+
+```text
+FULL_HISTORY
+APPOINTMENT_ONLY
+```
+
+A Patient UUID by itself does not provide authorization.
 
 ---
 
-## Technology Stack
+# 🛠️ Technology Stack
 
-### Frontend
+## Frontend
 
 ```text
 React.js
@@ -414,7 +496,7 @@ React Router
 lucide-react
 ```
 
-### Backend
+## Backend
 
 ```text
 FastAPI
@@ -429,7 +511,7 @@ pytest
 httpx
 ```
 
-### AI / ML
+## AI / ML
 
 ```text
 OpenAI API
@@ -444,14 +526,122 @@ scikit-learn / XGBoost
 
 ---
 
-## Run Locally
+# 🏗️ High-Level Architecture
 
-### Backend
+```mermaid
+flowchart LR
+    P[Patient] --> FE[React Frontend]
+    D[Doctor] --> FE
+    A[Admin] --> FE
+
+    FE --> API[FastAPI]
+
+    API --> AUTH[JWT + Role Authorization]
+    API --> DB[(PostgreSQL)]
+    API --> OAI[AI Provider]
+    API --> CV[PyTorch ResNet18]
+    API --> MAP[Nearby Healthcare Services]
+
+    CV --> CAM[Grad-CAM]
+    DB --> AUDIT[Audit Logs]
+```
+
+Important domain boundaries:
+
+```text
+Appointment ≠ Encounter
+AI Assessment ≠ Doctor Diagnosis
+Prescription ≠ Medication Reminder
+Availability ≠ Appointment
+Patient UUID ≠ Authorization
+Model Score ≠ Disease Probability
+Grad-CAM ≠ Tumor Segmentation
+```
+
+---
+
+# 📁 Project Structure
+
+```text
+MediVision/
+│
+├── .github/
+│
+├── backend/
+│   ├── alembic/
+│   ├── app/
+│   │   ├── ai/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── dependencies/
+│   │   ├── models/
+│   │   ├── providers/
+│   │   ├── repositories/
+│   │   ├── schemas/
+│   │   ├── services/
+│   │   └── main.py
+│   ├── scripts/
+│   ├── tests/
+│   ├── uploads/
+│   ├── alembic.ini
+│   ├── pytest.ini
+│   ├── requirements-phase40.txt
+│   └── requirements.txt
+│
+├── docs/
+│   ├── api/
+│   ├── database/
+│   ├── diagrams/
+│   ├── reports/
+│   ├── research/
+│   └── ui/
+│
+├── frontend/
+│   └── src/
+│       ├── api/
+│       ├── assets/
+│       ├── components/
+│       ├── constants/
+│       ├── features/
+│       ├── hooks/
+│       ├── lib/
+│       ├── pages/
+│       ├── routes/
+│       ├── schemas/
+│       └── utils/
+│
+├── ml/
+│   ├── data/brain_mri/
+│   ├── models/
+│   ├── outputs/
+│   ├── reports/
+│   ├── src/
+│   ├── README_PHASE37.md
+│   ├── README_PHASE38.md
+│   └── README_PHASE39.md
+│
+├── scripts/
+├── tests/
+├── .gitignore
+└── README.md
+```
+
+---
+
+# 🚀 Running Locally
+
+## Backend
 
 ```powershell
 cd C:\Shubham\MediVision\backend
 .myenv\Scripts\Activate
 fastapi dev app/main.py
+```
+
+Backend:
+
+```text
+http://127.0.0.1:8000
 ```
 
 Swagger:
@@ -460,7 +650,7 @@ Swagger:
 http://127.0.0.1:8000/docs
 ```
 
-### Frontend
+## Frontend
 
 ```powershell
 cd C:\Shubham\MediVision\frontend
@@ -473,7 +663,7 @@ Frontend:
 http://localhost:5173
 ```
 
-### ML
+## ML
 
 ```powershell
 cd C:\Shubham\MediVision\ml
@@ -482,7 +672,7 @@ cd C:\Shubham\MediVision\ml
 
 ---
 
-## Documentation
+# 📚 Documentation
 
 ```text
 docs/
@@ -490,25 +680,60 @@ docs/
 ├── database/
 ├── diagrams/
 ├── reports/
-└── research/
+├── research/
+└── ui/
 ```
 
-Start with [`docs/README.md`](docs/README.md).
+Documentation index:
+
+[`docs/README.md`](docs/README.md)
+
+UI gallery:
+
+[`docs/ui/README.md`](docs/ui/README.md)
 
 ---
 
-## Medical Disclaimer
+# ⚠️ Medical & AI Safety
 
-MediVision AI is an academic project. AI/model outputs are for informational, screening and decision-support purposes only. They are not a final diagnosis, guaranteed disease determination, medical prescription, emergency medical advice, or replacement for qualified healthcare professionals.
+Use:
+
+```text
+AI-assisted symptom assessment
+Possible conditions
+Medical-image screening/classification
+Clinical decision support
+Model score
+Grad-CAM model visualization
+```
+
+Avoid:
+
+```text
+Final Diagnosis
+Guaranteed diagnosis
+AI doctor
+Autonomous prescription
+100% disease probability
+Grad-CAM proves tumor location
+```
 
 ---
 
-## Academic Information
+# 🎓 Academic Information
 
 | Item | Details |
 |---|---|
 | Project | MediVision AI |
 | Type | Final Year Engineering Project |
 | Degree | Bachelor of Engineering — Computer Engineering |
-| University | Savitribai Phule Pune University (SPPU) |
+| University | Savitribai Phule Pune University |
 | Domain | Healthcare + Full Stack + AI/ML + Computer Vision |
+
+---
+
+# Repository
+
+```text
+https://github.com/Shubham-tidke2005/MediVision
+```
