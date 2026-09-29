@@ -2,7 +2,7 @@
 
 # 🩺 MediVision AI
 
-### AI-assisted Healthcare Support & Diagnostic Decision-Support Platform
+### AI-assisted Healthcare Support & Diagnostic Decision-Support Platform.
 
 **Predict • Prevent • Monitor • Recover**
 
